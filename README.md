@@ -120,8 +120,8 @@ Low-fidelity black and white wireframes, drawn in Figma on an iPhone 14 frame (3
 Make sure Flutter is installed (`flutter doctor` should look fine), then:
 
 ```bash
-git clone https://github.com/irtazaad328/Excelerate_App_Dev.git
-cd Excelerate_App_Dev
+git clone https://github.com/irtazaad328/ED-TECH_App.git
+cd ED-TECH_App
 flutter pub get
 flutter run
 ```
