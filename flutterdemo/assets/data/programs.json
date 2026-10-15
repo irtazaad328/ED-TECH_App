@@ -1,0 +1,51 @@
+[
+  {
+    "id": "p1",
+    "title": "Flutter Mobile App Development",
+    "teacherName": "Jerry Mentor",
+    "category": "Mobile Dev",
+    "price": 49.99,
+    "rating": 4.9,
+    "studentsEnrolled": 140,
+    "description": "Master Flutter and Dart to build production-ready iOS and Android apps with beautiful responsive UI and state management.",
+    "whatIsIncluded": [
+      "40+ Hours of Video Lessons",
+      "Full GitHub Source Code",
+      "Real-world Portfolio Projects",
+      "Weekly Action Meeting Reviews"
+    ],
+    "imageUrl": "assets/images/flutter_course.png"
+  },
+  {
+    "id": "p2",
+    "title": "Prompt Engineering & Research Integration",
+    "teacherName": "Laviza Mentor",
+    "category": "Artificial Intelligence",
+    "price": 39.99,
+    "rating": 4.8,
+    "studentsEnrolled": 220,
+    "description": "Learn structured prompt design frameworks, output evaluation metrics, and responsible AI workflows.",
+    "whatIsIncluded": [
+      "10+ Prompt Frameworks (RACE, CREATE)",
+      "Automated Testing Templates",
+      "Peer Evaluation Workflows"
+    ],
+    "imageUrl": "assets/images/ai_course.png"
+  },
+  {
+    "id": "p3",
+    "title": "UI/UX Mobile Design with Figma",
+    "teacherName": "Excelerate Design Team",
+    "category": "UI/UX Design",
+    "price": 29.99,
+    "rating": 4.7,
+    "studentsEnrolled": 95,
+    "description": "Design user journeys, wireframes, and high-fidelity interactive mobile prototypes on standard mobile frames.",
+    "whatIsIncluded": [
+      "Complete Figma Design System",
+      "Mobile Component Library",
+      "Heuristic Evaluation Guide"
+    ],
+    "imageUrl": "assets/images/figma_course.png"
+  }
+]

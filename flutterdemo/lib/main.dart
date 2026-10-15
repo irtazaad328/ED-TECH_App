@@ -1,17 +1,41 @@
 import 'package:flutter/material.dart';
+import 'routes/app_routes.dart';
+import 'screens/common/login_screen.dart';
+import 'screens/common/role_selection_screen.dart';
+import 'screens/learner/cart_screen.dart';
+import 'screens/learner/home_screen.dart';
+import 'screens/learner/program_details_screen.dart';
+import 'screens/learner/programs_list_screen.dart';
+import 'screens/teacher/cart_management_screen.dart';
+import 'screens/teacher/teacher_dashboard_screen.dart';
+import 'theme/app_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const EdTechApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class EdTechApp extends StatelessWidget {
+  const EdTechApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      title: 'Ed Tech - Team 6',
       debugShowCheckedModeBanner: false,
-      home: WelcomeScreen(),
+      theme: AppTheme.lightTheme,
+      initialRoute: AppRoutes.welcome,
+      routes: {
+        AppRoutes.welcome: (context) => const WelcomeScreen(),
+        AppRoutes.roleSelection: (context) => const RoleSelectionScreen(),
+        AppRoutes.learnerLogin: (context) => const LoginScreen(isTeacher: false),
+        AppRoutes.teacherLogin: (context) => const LoginScreen(isTeacher: true),
+        AppRoutes.learnerHome: (context) => const LearnerHomeScreen(),
+        AppRoutes.programsList: (context) => const ProgramsListScreen(),
+        AppRoutes.programDetails: (context) => const ProgramDetailsScreen(),
+        AppRoutes.cart: (context) => const CartScreen(),
+        AppRoutes.teacherDashboard: (context) => const TeacherDashboardScreen(),
+        AppRoutes.cartManagement: (context) => const CartManagementScreen(),
+      },
     );
   }
 }
@@ -31,66 +55,35 @@ class WelcomeScreen extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/images/logo1.png',
-                height: 250,
-                // Shows an icon if the logo file isn't added yet
+                height: 220,
                 errorBuilder: (context, error, stackTrace) =>
-                const Icon(Icons.school, size: 120),
+                    const Icon(Icons.school_rounded, size: 100, color: AppTheme.primary),
               ),
-              const SizedBox(height: 44),
+              const SizedBox(height: 36),
               const Text(
-                'Welcome to The Excelerator',
+                'Welcome to Ed Tech',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
               ),
               const SizedBox(height: 12),
               const Text(
-                'Discover programs, learn new skills, and grow with us.',
+                'Discover programs, learn new skills, and connect teachers with learners.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 15, color: AppTheme.textSecondary),
               ),
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const HomePage()),
-                  );
+                  Navigator.pushReplacementNamed(context, AppRoutes.roleSelection);
                 },
                 child: const Text('Get Started'),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int count = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('MAD-TEAM-6')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Welcome to the Dashboard'),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => setState(() => count),
-              child: const Text('Find Programs'),
-            ),
-          ],
         ),
       ),
     );
