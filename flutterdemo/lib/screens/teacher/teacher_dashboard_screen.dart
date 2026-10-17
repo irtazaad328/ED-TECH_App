@@ -2,126 +2,173 @@ import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
 import '../../theme/app_theme.dart';
 
+/// Screen 12: Teacher Dashboard
+/// Shows a welcome header, three metric cards and two quick actions.
+/// StatelessWidget = a screen that never changes by itself (the numbers are fixed for now).
 class TeacherDashboardScreen extends StatelessWidget {
   const TeacherDashboardScreen({super.key});
+
+  // Logout: go back to Role Selection and clear all earlier screens,
+  // so the Back button can't return to the dashboard.
+  void _logout(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.roleSelection,
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Teacher Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout_rounded),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, AppRoutes.roleSelection);
-            },
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ---------- 1. HEADER: avatar + greeting + logout ----------
+              Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 26,
+                    backgroundColor: AppTheme.primary,
+                    child: Icon(Icons.person_rounded,
+                        color: Colors.white, size: 28),
+                  ),
+                  const SizedBox(width: 14),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome, Instructor!',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Here is an overview of your programs',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: AppTheme.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: 'Logout',
+                    icon: const Icon(Icons.logout_rounded),
+                    onPressed: () => _logout(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 28),
+
+              // ---------- 2. METRIC CARDS ----------
+              const Text(
+                'Overview',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Row(
+                children: const [
+                  Expanded(
+                    child: _MetricCard(
+                      title: 'Active Programs',
+                      value: '4',
+                      icon: Icons.layers_rounded,
+                      color: AppTheme.primary,
+                    ),
+                  ),
+                  SizedBox(width: 14),
+                  Expanded(
+                    child: _MetricCard(
+                      title: 'Total Learners',
+                      value: '360',
+                      icon: Icons.people_alt_rounded,
+                      color: AppTheme.accent,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              const _MetricCard(
+                title: 'Total Revenue Earned',
+                value: '\$14,250',
+                icon: Icons.account_balance_wallet_rounded,
+                color: AppTheme.success,
+              ),
+              const SizedBox(height: 28),
+
+              // ---------- 3. QUICK ACTIONS ----------
+              const Text(
+                'Quick Actions',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 14),
+
+              // Action 1: opens Screen 13 (Cart Management)
+              Card(
+                child: ListTile(
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  leading: const CircleAvatar(
+                    backgroundColor: Color(0xFFEFF6FF),
+                    child: Icon(Icons.shopping_bag_outlined,
+                        color: AppTheme.primary),
+                  ),
+                  title: const Text(
+                    'Cart & Enrollment Management',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: const Text(
+                      'See who added programs to cart or has paid'),
+                  trailing:
+                      const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                  onTap: () =>
+                      Navigator.pushNamed(context, AppRoutes.cartManagement),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Action 2: Create New Program button (placeholder for now)
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.add_circle_outline_rounded),
+                  label: const Text('Create New Program'),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Create Program is coming soon!'),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Welcome, Instructor! 🎓',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 6),
-            const Text(
-              'Here is the performance overview of your programs.',
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 14),
-            ),
-            const SizedBox(height: 24),
-
-            // Metrics Grid
-            Row(
-              children: const [
-                Expanded(
-                  child: _MetricCard(
-                    title: 'Active Programs',
-                    value: '4',
-                    icon: Icons.layers_rounded,
-                    color: AppTheme.primary,
-                  ),
-                ),
-                SizedBox(width: 14),
-                Expanded(
-                  child: _MetricCard(
-                    title: 'Total Learners',
-                    value: '360',
-                    icon: Icons.people_alt_rounded,
-                    color: AppTheme.accent,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            const _MetricCard(
-              title: 'Total Revenue Earned',
-              value: '\$14,250.00',
-              icon: Icons.account_balance_wallet_rounded,
-              color: AppTheme.success,
-            ),
-            const SizedBox(height: 28),
-
-            // Quick Actions Header
-            const Text(
-              'Admin Controls',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 14),
-
-            // Action 1: Cart Management
-            Card(
-              child: ListTile(
-                leading: const CircleAvatar(
-                  backgroundColor: Color(0xFFEFF6FF),
-                  child: Icon(Icons.shopping_bag_outlined, color: AppTheme.primary),
-                ),
-                title: const Text('Cart & Enrollment Management', style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: const Text('See learners who added courses or completed payment'),
-                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-                onTap: () {
-                  Navigator.pushNamed(context, AppRoutes.cartManagement);
-                },
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            // Action 2: Add Program Mock
-            Card(
-              child: ListTile(
-                leading: const CircleAvatar(
-                  backgroundColor: Color(0xFFF0FDF4),
-                  child: Icon(Icons.add_circle_outline_rounded, color: AppTheme.success),
-                ),
-                title: const Text('Create New Program', style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: const Text('Publish new curriculum and set course pricing'),
-                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Add Program feature planned for upcoming sprints.')),
-                  );
-                },
-              ),
-            ),
-          ],
         ),
       ),
     );
   }
 }
 
+/// One reusable stat card (icon, big number, label).
+/// Built once here and used three times above, so we don't repeat code.
 class _MetricCard extends StatelessWidget {
   final String title;
   final String value;
@@ -138,6 +185,7 @@ class _MetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -155,12 +203,19 @@ class _MetricCard extends StatelessWidget {
           const SizedBox(height: 14),
           Text(
             value,
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             title,
-            style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppTheme.textSecondary,
+            ),
           ),
         ],
       ),
