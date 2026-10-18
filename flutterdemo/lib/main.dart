@@ -4,6 +4,7 @@ import 'screens/common/login_screen.dart';
 import 'screens/common/role_selection_screen.dart';
 import 'screens/learner/cart_screen.dart';
 import 'screens/learner/home_screen.dart';
+import 'screens/learner/payment_screen.dart';
 import 'screens/learner/program_details_screen.dart';
 import 'screens/learner/programs_list_screen.dart';
 import 'screens/teacher/cart_management_screen.dart';
@@ -33,6 +34,7 @@ class EdTechApp extends StatelessWidget {
         AppRoutes.programsList: (context) => const ProgramsListScreen(),
         AppRoutes.programDetails: (context) => const ProgramDetailsScreen(),
         AppRoutes.cart: (context) => const CartScreen(),
+        AppRoutes.payment: (context) => const PaymentScreen(),
         AppRoutes.teacherDashboard: (context) => const TeacherDashboardScreen(),
         AppRoutes.cartManagement: (context) => const CartManagementScreen(),
       },
