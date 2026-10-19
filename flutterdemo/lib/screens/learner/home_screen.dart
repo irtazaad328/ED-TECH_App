@@ -12,6 +12,37 @@ class LearnerHomeScreen extends StatefulWidget {
 class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
   int _currentIndex = 0;
 
+  void _confirmLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('Logout Confirmation'),
+          content: const Text('Are you sure you want to log out of your student account?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+              onPressed: () {
+                Navigator.pop(context); // close dialog
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.roleSelection,
+                  (route) => false,
+                );
+              },
+              child: const Text('Logout'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,12 +50,14 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
         title: const Text('Ed Tech'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_none_rounded),
-            onPressed: () {},
-          ),
-          IconButton(
+            tooltip: 'Cart',
             icon: const Icon(Icons.shopping_cart_outlined),
             onPressed: () => Navigator.pushNamed(context, AppRoutes.cart),
+          ),
+          IconButton(
+            tooltip: 'Logout',
+            icon: const Icon(Icons.logout_rounded),
+            onPressed: () => _confirmLogout(context),
           ),
         ],
       ),
@@ -157,6 +190,8 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
           });
           if (index == 1) {
             Navigator.pushNamed(context, AppRoutes.programsList);
+          } else if (index == 3) {
+            _confirmLogout(context);
           }
         },
         type: BottomNavigationBarType.fixed,
@@ -166,7 +201,7 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.school_rounded), label: 'Programs'),
           BottomNavigationBarItem(icon: Icon(Icons.bookmark_border_rounded), label: 'Bookmarks'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline_rounded), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.logout_rounded), label: 'Logout'),
         ],
       ),
     );
