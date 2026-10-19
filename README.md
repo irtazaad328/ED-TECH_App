@@ -1,7 +1,7 @@
 <h1 align="center">📚 Ed Tech</h1>
 
 <p align="center">
-  <b>One app where learners find programs and teachers manage them.</b>
+  <b>One unified Flutter mobile application connecting learners with top programs and instructors with powerful management tools.</b>
 </p>
 
 <p align="center">
@@ -13,31 +13,60 @@
 </p>
 
 <p align="center">
-  <a href="https://www.figma.com/design/QWMnhOtY99AqOI90lf4yMk/Team-6-Wireframes?node-id=0-1&t=R7Ajb2Jlw7v95zlR-1"><b>🎨 View Wireframes on Figma</b></a> •
-  <a href="docs/ED_TECH_Team6_Week2_Deliverable_Report.pdf"><b>📄 Week 2 Deliverable PDF Report</b></a>
+  <a href="https://www.figma.com/design/QWMnhOtY99AqOI90lf4yMk/Team-6-Wireframes?node-id=0-1&t=R7Ajb2Jlw7v95zlR-1"><b>🎨 View Wireframes on Figma</b></a>
 </p>
 
 ---
 
-## 📖 About
-**Ed Tech** is a mobile app built with Flutter where people who want to learn and people who want to teach can find each other. Teachers put their programs on the app. Learners browse them, pick one, pay for it and start learning, all from their phone.
+## 📖 About the Project
+**Ed Tech** is a cross-platform mobile application developed with Flutter and Dart for the **Excelerate Mobile App Development Remote Internship (Cohort 0510)** by **Team 6**. 
 
-This is the **Team 6** project for the **Excelerate Mobile App Development Remote Internship (Cohort 0510)**.
-
----
-
-## 🚀 Week 2 Deliverable: Working UI Prototype (All 13 Screens)
-For Week 2, our objective was to translate Week 1 wireframes into an interactive, functional Flutter UI prototype. While the minimum requirement was **4 core screens**, Team 6 has completed and integrated **all 13 interactive screens**!
-
-### 🌟 Core 4 Mandatory Screens
-1. **Login Screen (`lib/screens/common/login_screen.dart`):** Multi-role authentication (Learner/Teacher), email regex validation, password length check, show/hide password toggle, and navigation to Signup and Home.
-2. **Home Screen (`lib/screens/learner/home_screen.dart`):** Personalized learner greeting, notifications badge, announcements carousel, active course progress bar, featured programs, and bottom navigation.
-3. **Programs Listing Screen (`lib/screens/learner/programs_list_screen.dart`):** Mock JSON data loading (`assets/data/programs.json`), live search filter across titles, teachers, and topics, category filter chips (Mobile Dev, AI, UI/UX, Cloud), and interactive bookmark toggle.
-4. **Program Details Screen (`lib/screens/learner/program_details_screen.dart`):** Dynamic argument reception (`Program` model passed from listing), category banner badge, syllabus details, "What's Included" checklist, share link, bookmark toggle, and sticky "Add to Cart" checkout footer.
+The app bridges the gap between students seeking structured learning programs and teachers managing their courses, enrolled learners, and revenue.
 
 ---
 
-### 📋 Full 13-Screen Implementation Matrix
+## 📱 App in Action — UI Showcase (All Screenshots)
+
+### 🎓 1. Learner Journey: Onboarding & Home Portal
+
+| Role Selection | Learner Login | Learner Signup | Learner Home Portal |
+|:---:|:---:|:---:|:---:|
+| <img src="flutterdemo/assets/screenshots/01_role_selection.png" width="220" alt="Role Selection"> | <img src="flutterdemo/assets/screenshots/02_learner_login.png" width="220" alt="Learner Login"> | <img src="flutterdemo/assets/screenshots/03_learner_signup.png" width="220" alt="Learner Signup"> | <img src="flutterdemo/assets/screenshots/04_learner_home.png" width="220" alt="Learner Home"> |
+| *Role selector (Student vs Teacher)* | *Email & password validation* | *Registration with terms check* | *Progress tracking & announcements* |
+
+---
+
+### 📚 2. Program Discovery, Course Details & Checkout
+
+| Programs List | Program Details | My Cart | Checkout & Payment |
+|:---:|:---:|:---:|:---:|
+| <img src="flutterdemo/assets/screenshots/05_programs_list.png" width="220" alt="Programs List"> | <img src="flutterdemo/assets/screenshots/08_program_details.png" width="220" alt="Program Details"> | <img src="flutterdemo/assets/screenshots/06_cart.png" width="220" alt="My Cart"> | <img src="flutterdemo/assets/screenshots/07_payment.png" width="220" alt="Payment"> |
+| *Live search & category filters* | *Dynamic course info & syllabus* | *Item removal & cost breakdown* | *Card, Bank & Mobile Wallets* |
+
+---
+
+### 🧑‍🏫 3. Teacher / Admin Flow: Authentication & Dashboard
+
+| Teacher Login | Teacher Signup | Teacher Dashboard | Cart & Enrollment Pipeline |
+|:---:|:---:|:---:|:---:|
+| <img src="flutterdemo/assets/screenshots/09_teacher_login.png" width="220" alt="Teacher Login"> | <img src="flutterdemo/assets/screenshots/10_teacher_signup.png" width="220" alt="Teacher Signup"> | <img src="flutterdemo/assets/screenshots/11_teacher_dashboard.png" width="220" alt="Teacher Dashboard"> | <img src="flutterdemo/assets/screenshots/12_cart_management.png" width="220" alt="Cart Pipeline"> |
+| *Teacher authentication wireframe* | *Instructor account creation* | *Programs, learners & revenue KPIs* | *Student pipeline & reminders* |
+
+---
+
+## 🌟 Week 2 Deliverables Summary
+
+For Week 2, the core objective was translating Week 1 wireframes into an interactive, functional Flutter UI prototype. While Excelerate guidelines required at least **4 core screens**, Team 6 has completed **all 13 interactive screens**!
+
+### Core 4 Mandatory Screens:
+1. **Login Screen (`lib/screens/common/login_screen.dart`):** Multi-role authentication, email regex validation, password toggle, and navigation.
+2. **Home Screen (`lib/screens/learner/home_screen.dart`):** Student greeting, active course progress card, live announcements, and bottom navigation.
+3. **Programs Listing Screen (`lib/screens/learner/programs_list_screen.dart`):** JSON data loading (`assets/data/programs.json`), real-time search across titles and mentors, category filter chips (Mobile Dev, AI, UI/UX, Cloud), and bookmark toggles.
+4. **Program Details Screen (`lib/screens/learner/program_details_screen.dart`):** Dynamically unpacks selected course arguments, displays syllabus, "What's Included" checklist, share link, bookmarks, and sticky "Add to Cart" button.
+
+---
+
+## 📋 Complete 13-Screen Implementation Matrix
 
 | # | Screen Name | Assigned Developer | File Path | Status |
 |---|---|---|---|:---:|
@@ -57,7 +86,7 @@ For Week 2, our objective was to translate Week 1 wireframes into an interactive
 
 ---
 
-## 🧭 Navigation Flow
+## 🧭 Navigation Architecture
 
 ```
 Welcome Screen (/)
@@ -91,26 +120,26 @@ Payment (/payment) ──► Confirmation Receipt ──► Back to Home
 ## 🛠️ Verification & Quality Assurance
 - **Automated Tests:** `flutter test` passes 100% of widget tests.
 - **Static Analysis:** `flutter analyze` passes with 0 compile errors.
-- **Cross-Platform:** Verified on Chrome Web and Android mobile viewports.
+- **Cross-Platform:** Responsive on Mobile (iPhone 14 / Android) and Web.
 
 ---
 
-## 🚀 Running the App Locally
+## 🚀 Running the Project Locally
 
 ```bash
-# 1. Clone repository
+# 1. Clone the repository
 git clone https://github.com/irtazaad328/ED-TECH_App.git
 
-# 2. Navigate to project
+# 2. Open project folder
 cd ED-TECH_App/flutterdemo
 
-# 3. Fetch dependencies
+# 3. Fetch Flutter packages
 flutter pub get
 
-# 4. Run on Chrome Web
+# 4. Run on Chrome Web (Press F12 -> Ctrl+Shift+M for Mobile View)
 flutter run -d chrome
 
-# 5. Run on Connected Device / Emulator
+# 5. Run on Connected Device / Android Emulator
 flutter run
 ```
 
@@ -129,7 +158,7 @@ flutter run
 
 ---
 
-## 🗺️ Roadmap
+## 🗺️ Project Roadmap
 - [x] **Week 1:** Proposal, Figma wireframes, and project skeleton setup
-- [x] **Week 2:** Build all 13 Flutter UI screens from wireframes, implement interactive navigation, automated tests, and deliverable report
+- [x] **Week 2:** Build all 13 interactive Flutter UI screens, implement navigation flows, automated tests, and screenshots showcase
 - [ ] **Week 3:** Backend integration, state management, and real database persistence
