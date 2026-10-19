@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'routes/app_routes.dart';
 import 'screens/common/login_screen.dart';
 import 'screens/common/role_selection_screen.dart';
+import 'screens/common/signup_screen.dart';
 import 'screens/learner/cart_screen.dart';
 import 'screens/learner/home_screen.dart';
 import 'screens/learner/payment_screen.dart';
@@ -29,7 +30,9 @@ class EdTechApp extends StatelessWidget {
         AppRoutes.welcome: (context) => const WelcomeScreen(),
         AppRoutes.roleSelection: (context) => const RoleSelectionScreen(),
         AppRoutes.learnerLogin: (context) => const LoginScreen(isTeacher: false),
+        AppRoutes.learnerSignup: (context) => const SignupScreen(isTeacher: false),
         AppRoutes.teacherLogin: (context) => const LoginScreen(isTeacher: true),
+        AppRoutes.teacherSignup: (context) => const SignupScreen(isTeacher: true),
         AppRoutes.learnerHome: (context) => const LearnerHomeScreen(),
         AppRoutes.programsList: (context) => const ProgramsListScreen(),
         AppRoutes.programDetails: (context) => const ProgramDetailsScreen(),
