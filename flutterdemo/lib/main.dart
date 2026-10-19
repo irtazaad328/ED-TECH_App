@@ -10,6 +10,8 @@ import 'screens/learner/program_details_screen.dart';
 import 'screens/learner/programs_list_screen.dart';
 import 'screens/teacher/cart_management_screen.dart';
 import 'screens/teacher/teacher_dashboard_screen.dart';
+import 'screens/teacher/teacher_login_screen.dart';
+import 'screens/teacher/teacher_signup_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -31,8 +33,8 @@ class EdTechApp extends StatelessWidget {
         AppRoutes.roleSelection: (context) => const RoleSelectionScreen(),
         AppRoutes.learnerLogin: (context) => const LoginScreen(isTeacher: false),
         AppRoutes.learnerSignup: (context) => const SignupScreen(isTeacher: false),
-        AppRoutes.teacherLogin: (context) => const LoginScreen(isTeacher: true),
-        AppRoutes.teacherSignup: (context) => const SignupScreen(isTeacher: true),
+        AppRoutes.teacherLogin: (context) => const TeacherLoginScreen(),
+        AppRoutes.teacherSignup: (context) => const TeacherSignupScreen(),
         AppRoutes.learnerHome: (context) => const LearnerHomeScreen(),
         AppRoutes.programsList: (context) => const ProgramsListScreen(),
         AppRoutes.programDetails: (context) => const ProgramDetailsScreen(),
