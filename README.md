@@ -9,129 +9,127 @@
   <img src="https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart">
   <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white" alt="Figma">
   <img src="https://img.shields.io/badge/Team-6-25307C?style=for-the-badge" alt="Team 6">
-  <img src="https://img.shields.io/badge/Status-Week%201%20done-2ea44f?style=for-the-badge" alt="Status">
+  <img src="https://img.shields.io/badge/Status-Week%202%20Done-2ea44f?style=for-the-badge" alt="Status">
 </p>
 
 <p align="center">
-  <a href="https://www.figma.com/design/QWMnhOtY99AqOI90lf4yMk/Team-6-Wireframes?node-id=0-1&t=R7Ajb2Jlw7v95zlR-1"><b>🎨 View the wireframes on Figma</b></a>
+  <a href="https://www.figma.com/design/QWMnhOtY99AqOI90lf4yMk/Team-6-Wireframes?node-id=0-1&t=R7Ajb2Jlw7v95zlR-1"><b>🎨 View Wireframes on Figma</b></a> •
+  <a href="docs/ED_TECH_Team6_Week2_Deliverable_Report.pdf"><b>📄 Week 2 Deliverable PDF Report</b></a>
 </p>
-
----
-
-**Quick links:** [About](#-about) · [Vision](#-vision) · [Objectives](#-objectives) · [Users](#-target-users) · [Features](#-features) · [Navigation](#-navigation-flow) · [Wireframes](#-wireframes) · [Setup](#-getting-started) · [Team](#-team-6) · [Roadmap](#-roadmap)
 
 ---
 
 ## 📖 About
+**Ed Tech** is a mobile app built with Flutter where people who want to learn and people who want to teach can find each other. Teachers put their programs on the app. Learners browse them, pick one, pay for it and start learning, all from their phone.
 
-Ed Tech is a mobile app built with Flutter where people who want to learn and people who want to teach can find each other. Teachers put their programs on the app. Learners browse them, pick one, pay for it and start learning, all from their phone.
+This is the **Team 6** project for the **Excelerate Mobile App Development Remote Internship (Cohort 0510)**.
 
-This is the Team 6 project for our Flutter app development course. Week 1 is the planning week: the proposal, the wireframes and the project setup. The real screens start in Week 2.
+---
 
-## 🎯 Vision
+## 🚀 Week 2 Deliverable: Working UI Prototype (All 13 Screens)
+For Week 2, our objective was to translate Week 1 wireframes into an interactive, functional Flutter UI prototype. While the minimum requirement was **4 core screens**, Team 6 has completed and integrated **all 13 interactive screens**!
 
-Right now, a student who wants to learn something new has to jump between websites, social media pages and WhatsApp groups to find a decent course. It is hard to see who is teaching, what the price is, or what you have already joined. Teachers have the same problem from their side, because they have no simple way to see who signed up or how much they earned.
+### 🌟 Core 4 Mandatory Screens
+1. **Login Screen (`lib/screens/common/login_screen.dart`):** Multi-role authentication (Learner/Teacher), email regex validation, password length check, show/hide password toggle, and navigation to Signup and Home.
+2. **Home Screen (`lib/screens/learner/home_screen.dart`):** Personalized learner greeting, notifications badge, announcements carousel, active course progress bar, featured programs, and bottom navigation.
+3. **Programs Listing Screen (`lib/screens/learner/programs_list_screen.dart`):** Mock JSON data loading (`assets/data/programs.json`), live search filter across titles, teachers, and topics, category filter chips (Mobile Dev, AI, UI/UX, Cloud), and interactive bookmark toggle.
+4. **Program Details Screen (`lib/screens/learner/program_details_screen.dart`):** Dynamic argument reception (`Program` model passed from listing), category banner badge, syllabus details, "What's Included" checklist, share link, bookmark toggle, and sticky "Add to Cart" checkout footer.
 
-We want Ed Tech to fix both sides: a simple app for finding programs, and a simple dashboard for managing them.
+---
 
-## ✅ Objectives
+### 📋 Full 13-Screen Implementation Matrix
 
-- Make it easy for learners to find and buy programs in one place.
-- Give teachers a simple dashboard to manage programs and see their learners and earnings.
-- Keep the screens simple, so a new user can go from opening the app to paying in a few taps.
-- Plan every screen and the navigation first with wireframes, then build the Flutter UI step by step.
+| # | Screen Name | Assigned Developer | File Path | Status |
+|---|---|---|---|:---:|
+| 1 | **Role Selection (Learner)** | Irtaza Ahmad (Lead) | `flutterdemo/lib/screens/common/role_selection_screen.dart` | ✅ Complete |
+| 2 | **Learner Login** | Fatima Zahid | `flutterdemo/lib/screens/common/login_screen.dart` | ✅ Complete |
+| 3 | **Learner Signup** | Fatima Zahid | `flutterdemo/lib/screens/common/signup_screen.dart` | ✅ Complete |
+| 4 | **Learner Home Portal** | Irtaza Ahmad (Lead) | `flutterdemo/lib/screens/learner/home_screen.dart` | ✅ Complete |
+| 5 | **Programs Listing** | Idiris Hassan | `flutterdemo/lib/screens/learner/programs_list_screen.dart` | ✅ Complete |
+| 6 | **Program Details (Dynamic)** | Sameer Rizwan | `flutterdemo/lib/screens/learner/program_details_screen.dart` | ✅ Complete |
+| 7 | **My Cart** | Mannu | `flutterdemo/lib/screens/learner/cart_screen.dart` | ✅ Complete |
+| 8 | **Payment & Checkout** | Akshata | `flutterdemo/lib/screens/learner/payment_screen.dart` | ✅ Complete |
+| 9 | **Role Selection (Teacher)** | Irtaza Ahmad (Lead) | `flutterdemo/lib/screens/common/role_selection_screen.dart` | ✅ Complete |
+| 10 | **Teacher Login** | Aishika Pal | `flutterdemo/lib/screens/teacher/teacher_login_screen.dart` | ✅ Complete |
+| 11 | **Teacher Signup** | Aishika Pal | `flutterdemo/lib/screens/teacher/teacher_signup_screen.dart` | ✅ Complete |
+| 12 | **Teacher Dashboard** | Jennifer Shantal | `flutterdemo/lib/screens/teacher/teacher_dashboard_screen.dart` | ✅ Complete |
+| 13 | **Cart Management (Admin)** | Abdul Kadir Choudhury | `flutterdemo/lib/screens/teacher/cart_management_screen.dart` | ✅ Complete |
 
-## 👥 Target users
+---
 
-| | Who they are | What they need |
-|---|---|---|
-| 🎓 **Learners** | University and college students, and anyone who wants to pick up a new skill | Search programs, check the price and teacher, pay, and track progress |
-| 🧑‍🏫 **Teachers (admins)** | Instructors who create and sell programs | Add programs, post announcements, see analytics, and check who has paid or still has a program in the cart |
+## 🧭 Navigation Flow
 
-## ✨ Features
+```
+Welcome Screen (/)
+      │
+      ▼
+Role Selection (/role_selection)
+      │
+      ├──────────────────────────────────────────────┐
+      │ (Student Flow)                               │ (Teacher Flow)
+      ▼                                              ▼
+Learner Login / Signup                        Teacher Login / Signup
+      │                                              │
+      ▼                                              ▼
+Learner Home Portal (/learner_home)           Teacher Dashboard (/teacher_dashboard)
+      │                                              │
+      ▼                                              ▼
+Programs List (/programs_list)                Cart Management (/cart_management)
+      │
+      ▼
+Program Details (/program_details)
+      │
+      ▼
+My Cart (/cart)
+      │
+      ▼
+Payment (/payment) ──► Confirmation Receipt ──► Back to Home
+```
 
-<table>
-<tr>
-<td width="50%" valign="top">
+---
 
-### 🎓 For learners
-- Role selection, then login or signup (email and password, or Google)
-- Home with announcements, featured programs, a progress card and a notifications bell
-- Programs list with search and cards (image, title, teacher, price, bookmark)
-- Program details with description, what is included, Add to Cart and Bookmark
-- Cart (programs from one teacher only) and payment by card, bank transfer or wallet
-- Bottom navigation: Home, Programs, Bookmarks, Profile
+## 🛠️ Verification & Quality Assurance
+- **Automated Tests:** `flutter test` passes 100% of widget tests.
+- **Static Analysis:** `flutter analyze` passes with 0 compile errors.
+- **Cross-Platform:** Verified on Chrome Web and Android mobile viewports.
 
-</td>
-<td width="50%" valign="top">
+---
 
-### 🧑‍🏫 For teachers
-- Teacher login and signup (name, email, password, phone, area of expertise)
-- Dashboard with number of programs, number of learners and total earnings
-- Quick actions: Add Program, Announcements, Analytics
-- Cart management list with learner, program and status (In cart or Paid), with filters
-- Menu: Dashboard, Programs, Users
-
-</td>
-</tr>
-</table>
-
-> Bookmarks, Profile, Notifications, Announcements, Analytics and the lessons screens are planned, but were not drawn in Week 1.
-
-## 🧭 Navigation flow
-
-The app opens on Role Selection and splits into two paths.
-
-**🎓 Learner**
-
-`Role Selection` → `Learner Login / Signup` → `Home` → `Programs List` → `Program Details` → `My Cart` → `Payment` → back to `Home`
-
-**🧑‍🏫 Teacher**
-
-`Role Selection` → `Teacher Login / Signup` → `Teacher Dashboard` → `Cart Management`
-
-## 🖼️ Wireframes
-
-Low-fidelity black and white wireframes, drawn in Figma on an iPhone 14 frame (390 x 844).
-
-🔗 [Open the Team-6-Wireframes file](https://www.figma.com/design/QWMnhOtY99AqOI90lf4yMk/Team-6-Wireframes?node-id=0-1&t=R7Ajb2Jlw7v95zlR-1)
-
-| Learner screens | Teacher screens |
-|---|---|
-| Role Selection | Role Selection (teacher) |
-| Learner Login | Teacher Login |
-| Learner Signup | Teacher Signup |
-| Home | Teacher Dashboard |
-| Programs List | Cart Management |
-| Program Details | |
-| My Cart | |
-| Payment | |
-
-## 🛠️ Tech
-
-| Tool | Used for |
-|---|---|
-| Flutter (Dart) | Android and iOS app from one codebase |
-| Git and GitHub | Version control and teamwork |
-| Figma | Wireframes |
-
-## 🚀 Getting started
-
-Make sure Flutter is installed (`flutter doctor` should look fine), then:
+## 🚀 Running the App Locally
 
 ```bash
+# 1. Clone repository
 git clone https://github.com/irtazaad328/ED-TECH_App.git
-cd ED-TECH_App
+
+# 2. Navigate to project
+cd ED-TECH_App/flutterdemo
+
+# 3. Fetch dependencies
 flutter pub get
+
+# 4. Run on Chrome Web
+flutter run -d chrome
+
+# 5. Run on Connected Device / Emulator
 flutter run
 ```
 
-## 🤝 Team 6
+---
 
-Mannu · Irtaza · Idiris · Akshata · Aishika · Jennifer · Fatima · Kadir · Martha
+## 🤝 Team 6 Members
+- **Irtaza Ahmad** (Team Lead)
+- **Fatima Zahid**
+- **Idiris Hassan**
+- **Sameer Rizwan**
+- **Mannu**
+- **Akshata**
+- **Aishika Pal**
+- **Jennifer Shantal**
+- **Abdul Kadir Choudhury**
+
+---
 
 ## 🗺️ Roadmap
-
-- [x] **Week 1:** proposal, wireframes and repository setup
-- [ ] **Week 2:** build the main Flutter screens from the wireframes and connect them with navigation
-- [ ] **Later:** add the remaining features, then test and polish
+- [x] **Week 1:** Proposal, Figma wireframes, and project skeleton setup
+- [x] **Week 2:** Build all 13 Flutter UI screens from wireframes, implement interactive navigation, automated tests, and deliverable report
+- [ ] **Week 3:** Backend integration, state management, and real database persistence
