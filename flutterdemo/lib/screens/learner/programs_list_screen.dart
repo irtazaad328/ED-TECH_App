@@ -25,14 +25,17 @@ class ProgramsListScreen extends StatefulWidget {
 }
 
 class _ProgramsListScreenState extends State<ProgramsListScreen> {
-  static const List<String> _categories = [
-    'All',
-    'Mobile Dev',
-    'Artificial Intelligence',
-    'UI/UX Design',
-  ];
+  /// Chip label -> category value used in programs.json.
+  /// `null` means "All" (no category filter).
+  static const Map<String, String?> _categories = {
+    'All': null,
+    'Mobile Dev': 'Mobile Dev',
+    'AI': 'Artificial Intelligence',
+    'UI/UX': 'UI/UX Design',
+    'Cloud': 'Cloud',
+  };
 
-  late final Future<List<Program>> _programsFuture;
+  late Future<List<Program>> _programsFuture;
   final TextEditingController _searchController = TextEditingController();
 
   String _searchQuery = '';
@@ -46,6 +49,13 @@ class _ProgramsListScreenState extends State<ProgramsListScreen> {
     _programsFuture = loadPrograms();
   }
 
+  /// Re-triggers the JSON load (used by the "Try Again" button).
+  void _retry() {
+    setState(() {
+      _programsFuture = loadPrograms();
+    });
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -55,9 +65,9 @@ class _ProgramsListScreenState extends State<ProgramsListScreen> {
   /// Applies the category chip + search text to the full list.
   List<Program> _applyFilters(List<Program> programs) {
     final query = _searchQuery.trim().toLowerCase();
+    final category = _categories[_selectedCategory];
     return programs.where((p) {
-      final matchesCategory =
-          _selectedCategory == 'All' || p.category == _selectedCategory;
+      final matchesCategory = category == null || p.category == category;
       final matchesSearch = query.isEmpty ||
           p.title.toLowerCase().contains(query) ||
           p.teacherName.toLowerCase().contains(query) ||
@@ -110,45 +120,69 @@ class _ProgramsListScreenState extends State<ProgramsListScreen> {
             child: FutureBuilder<List<Program>>(
               future: _programsFuture,
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
+                // Loading state
+                if (snapshot.connectionState != ConnectionState.done) {
                   return const Center(child: CircularProgressIndicator());
                 }
+
+                // Error state — friendly message + retry
                 if (snapshot.hasError) {
+                  debugPrint('Failed to load programs: ${snapshot.error}');
                   return _buildMessage(
                     icon: Icons.error_outline_rounded,
+                    iconColor: Colors.redAccent,
                     title: 'Could not load programs',
-                    subtitle: '${snapshot.error}',
+                    subtitle:
+                        'Something went wrong while loading the courses. '
+                        'Please check your connection and try again.',
+                    action: ElevatedButton.icon(
+                      onPressed: _retry,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text('Try Again'),
+                    ),
                   );
                 }
 
                 final filtered = _applyFilters(snapshot.data ?? []);
-                if (filtered.isEmpty) {
-                  return _buildMessage(
-                    icon: Icons.search_off_rounded,
-                    title: 'No programs found',
-                    subtitle: 'Try a different search or category.',
-                  );
-                }
 
-                return ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                  itemCount: filtered.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 14),
-                  itemBuilder: (context, index) {
-                    final program = filtered[index];
-                    return _ProgramCard(
-                      program: program,
-                      isBookmarked: _bookmarkedIds.contains(program.id),
-                      onTap: () => _openDetails(program),
-                      onBookmark: () => _toggleBookmark(program),
-                    );
-                  },
+                // AnimatedSwitcher fades between results when search/chips change.
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: filtered.isEmpty
+                      ? KeyedSubtree(
+                          key: const ValueKey('empty'),
+                          child: _buildMessage(
+                            icon: Icons.search_off_rounded,
+                            title: 'No programs found',
+                            subtitle: 'Try a different search or category.',
+                          ),
+                        )
+                      : _buildList(filtered),
                 );
               },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildList(List<Program> filtered) {
+    return ListView.separated(
+      // Keyed by category so switching chips cross-fades; typing stays instant.
+      key: ValueKey(_selectedCategory),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      itemCount: filtered.length,
+      separatorBuilder: (_, _) => const SizedBox(height: 14),
+      itemBuilder: (context, index) {
+        final program = filtered[index];
+        return _ProgramCard(
+          program: program,
+          isBookmarked: _bookmarkedIds.contains(program.id),
+          onTap: () => _openDetails(program),
+          onBookmark: () => _toggleBookmark(program),
+        );
+      },
     );
   }
 
@@ -201,7 +235,7 @@ class _ProgramsListScreenState extends State<ProgramsListScreen> {
         itemCount: _categories.length,
         separatorBuilder: (_, _) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
-          final category = _categories[index];
+          final category = _categories.keys.elementAt(index);
           final selected = category == _selectedCategory;
           return Center(
             child: ChoiceChip(
@@ -232,6 +266,8 @@ class _ProgramsListScreenState extends State<ProgramsListScreen> {
     required IconData icon,
     required String title,
     required String subtitle,
+    Color iconColor = AppTheme.textSecondary,
+    Widget? action,
   }) {
     return Center(
       child: Padding(
@@ -239,7 +275,7 @@ class _ProgramsListScreenState extends State<ProgramsListScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 56, color: AppTheme.textSecondary),
+            Icon(icon, size: 56, color: iconColor),
             const SizedBox(height: 12),
             Text(
               title,
@@ -255,6 +291,10 @@ class _ProgramsListScreenState extends State<ProgramsListScreen> {
               textAlign: TextAlign.center,
               style: const TextStyle(color: AppTheme.textSecondary),
             ),
+            if (action != null) ...[
+              const SizedBox(height: 20),
+              action,
+            ],
           ],
         ),
       ),
@@ -285,6 +325,8 @@ class _ProgramCard extends StatelessWidget {
         return Icons.psychology_rounded;
       case 'UI/UX Design':
         return Icons.design_services_rounded;
+      case 'Cloud':
+        return Icons.cloud_rounded;
       default:
         return Icons.school_rounded;
     }

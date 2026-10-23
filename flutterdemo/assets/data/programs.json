@@ -47,5 +47,21 @@
       "Heuristic Evaluation Guide"
     ],
     "imageUrl": "assets/images/figma_course.png"
+  },
+  {
+    "id": "p4",
+    "title": "Cloud Fundamentals with AWS & Firebase",
+    "teacherName": "Excelerate Cloud Team",
+    "category": "Cloud",
+    "price": 34.99,
+    "rating": 4.6,
+    "studentsEnrolled": 110,
+    "description": "Deploy, scale and secure apps in the cloud. Covers core AWS services, Firebase backends, and CI/CD pipelines for mobile apps.",
+    "whatIsIncluded": [
+      "Hands-on AWS & Firebase Labs",
+      "Deployment Pipeline Templates",
+      "Cloud Security Checklist"
+    ],
+    "imageUrl": "assets/images/cloud_course.png"
   }
 ]
