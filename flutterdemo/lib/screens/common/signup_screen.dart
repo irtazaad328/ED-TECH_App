@@ -25,6 +25,12 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _agreeToTerms = true;
+  bool _isLoading = false;
+
+  // Regular expression for RFC 5322 compliant email validation
+  static final RegExp _emailRegExp = RegExp(
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+  );
 
   @override
   void dispose() {
@@ -36,24 +42,38 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  void _handleSignup() {
+  Future<void> _handleSignup() async {
+    if (_isLoading) return;
+
     if (!_agreeToTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please accept the Terms & Conditions to register.'),
+          content: Text('Please accept the Terms of Service & Privacy Policy to register.'),
           backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
         ),
       );
       return;
     }
 
-    if (_formKey.currentState?.validate() ?? true) {
+    if (_formKey.currentState?.validate() ?? false) {
+      setState(() => _isLoading = true);
+
+      // Simulate network registration delay
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      if (!mounted) return;
+
+      setState(() => _isLoading = false);
+
+      final userName = _nameController.text.trim();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Welcome, ${_nameController.text.trim()}! Account created successfully.',
+            'Welcome, $userName! Your account has been created successfully.',
           ),
           backgroundColor: AppTheme.success,
+          behavior: SnackBarBehavior.floating,
         ),
       );
 
@@ -94,7 +114,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     width: 72,
                     height: 72,
                     decoration: BoxDecoration(
-                      color: AppTheme.accent.withOpacity(0.12),
+                      color: AppTheme.accent.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -132,6 +152,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 // Full Name Field
                 TextFormField(
                   controller: _nameController,
+                  textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     labelText: 'Full Name',
                     hintText: 'e.g. Ali Khan',
@@ -142,7 +163,10 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your name';
+                      return 'Full name is required';
+                    }
+                    if (value.trim().length < 3) {
+                      return 'Name must be at least 3 characters long';
                     }
                     return null;
                   },
@@ -153,6 +177,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     labelText: 'Email Address',
                     hintText: 'name@example.com',
@@ -163,10 +188,10 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your email';
+                      return 'Email address is required';
                     }
-                    if (!value.contains('@')) {
-                      return 'Please enter a valid email address';
+                    if (!_emailRegExp.hasMatch(value.trim())) {
+                      return 'Please enter a valid email address (e.g. name@domain.com)';
                     }
                     return null;
                   },
@@ -176,7 +201,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 // Teacher Specific Fields (Area of Expertise + Phone)
                 if (widget.isTeacher) ...[
                   DropdownButtonFormField<String>(
-                    value: _selectedExpertise,
+                    initialValue: _selectedExpertise,
                     decoration: InputDecoration(
                       labelText: 'Primary Area of Expertise',
                       prefixIcon: const Icon(Icons.school_outlined),
@@ -212,6 +237,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   TextFormField(
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       labelText: 'Phone Number',
                       hintText: '+92 300 1234567',
@@ -228,6 +254,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
+                  textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     hintText: '••••••••',
@@ -264,6 +291,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: _obscureConfirmPassword,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => _handleSignup(),
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
                     hintText: '••••••••',
@@ -285,6 +314,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                   validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please confirm your password';
+                    }
                     if (value != _passwordController.text) {
                       return 'Passwords do not match';
                     }
@@ -299,11 +331,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     Checkbox(
                       value: _agreeToTerms,
                       activeColor: AppTheme.primary,
-                      onChanged: (val) {
-                        setState(() {
-                          _agreeToTerms = val ?? false;
-                        });
-                      },
+                      onChanged: _isLoading
+                          ? null
+                          : (val) {
+                              setState(() {
+                                _agreeToTerms = val ?? false;
+                              });
+                            },
                     ),
                     const Expanded(
                       child: Text(
@@ -315,19 +349,28 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 const SizedBox(height: 18),
 
-                // Sign up Button
+                // Sign up Button with Loading Indicator
                 ElevatedButton(
-                  onPressed: _handleSignup,
+                  onPressed: _isLoading ? null : _handleSignup,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'Sign Up',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Text(
+                          'Sign Up',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
                 ),
                 const SizedBox(height: 16),
 
@@ -344,7 +387,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: _handleSignup,
+                  onPressed: _isLoading ? null : _handleSignup,
                 ),
                 const SizedBox(height: 24),
 
