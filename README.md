@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart">
   <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white" alt="Figma">
   <img src="https://img.shields.io/badge/Team-6-25307C?style=for-the-badge" alt="Team 6">
-  <img src="https://img.shields.io/badge/Status-Week%202%20Done-2ea44f?style=for-the-badge" alt="Status">
+  <img src="https://img.shields.io/badge/Status-Week%203%20Done-2ea44f?style=for-the-badge" alt="Status">
 </p>
 
 <p align="center">
@@ -63,6 +63,26 @@ For Week 2, the core objective was translating Week 1 wireframes into an interac
 2. **Home Screen (`lib/screens/learner/home_screen.dart`):** Student greeting, active course progress card, live announcements, and bottom navigation.
 3. **Programs Listing Screen (`lib/screens/learner/programs_list_screen.dart`):** JSON data loading (`assets/data/programs.json`), real-time search across titles and mentors, category filter chips (Mobile Dev, AI, UI/UX, Cloud), and bookmark toggles.
 4. **Program Details Screen (`lib/screens/learner/program_details_screen.dart`):** Dynamically unpacks selected course arguments, displays syllabus, "What's Included" checklist, share link, bookmarks, and sticky "Add to Cart" button.
+
+---
+
+## 🚀 Week 3 Deliverables Summary (API / JSON Integration & Form Validation)
+
+For Week 3, Team 6 evolved the UI prototype into a **functional, API-connected application** with live form validation, dynamic JSON data loading, and comprehensive test coverage. Full details are documented in [WEEK3_CHANGELOG.md](WEEK3_CHANGELOG.md).
+
+### 🔑 Key Achievements:
+1. **Dynamic JSON Data Loading:**
+   - `ProgramsListScreen` dynamically loads catalog data asynchronously from `assets/data/programs.json` with a loading spinner and error retry mechanism (`FutureBuilder`).
+   - `ProgramDetailsScreen` receives and unpacks dynamic `Program` arguments (title, mentor, pricing, ratings, what's included).
+2. **Interactive Forms & Robust Validation:**
+   - **Learner Login & Signup:** Strict email regex, password minimum 6-character length, confirm password matching, terms agreement checkbox, and loading spinners.
+   - **Teacher Login & Signup:** Validation rules powered by `AuthValidators` with real-time SnackBar feedback.
+   - **Checkout & Payment:** 16-digit card number validation, MM/YY expiration format check, CVV/CVC validation, and mobile wallet number regex.
+3. **Cart & Reminder Management:**
+   - Interactive cart management pipeline with status filtering (All, Paid, In Cart) and live payment reminders.
+   - Dynamic cart pricing, discount calculations, and item deletion with an empty cart state.
+4. **Automated Testing Suite:**
+   - 100% test pass rate across 6 dedicated widget test suites (`auth_validation_test.dart`, `teacher_auth_test.dart`, `payment_validation_test.dart`, `cart_management_test.dart`, `learner_cart_test.dart`, `program_details_test.dart`).
 
 ---
 
@@ -161,4 +181,5 @@ flutter run
 ## 🗺️ Project Roadmap
 - [x] **Week 1:** Proposal, Figma wireframes, and project skeleton setup
 - [x] **Week 2:** Build all 13 interactive Flutter UI screens, implement navigation flows, automated tests, and screenshots showcase
-- [ ] **Week 3:** Backend integration, state management, and real database persistence
+- [x] **Week 3:** Mock API / JSON integration, dynamic route arguments, robust form validations, loading states, and 100% test coverage
+- [ ] **Week 4:** Final polish, comprehensive backend integration, and submission showcase
