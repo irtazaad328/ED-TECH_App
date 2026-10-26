@@ -95,12 +95,14 @@ class WireframeField extends StatelessWidget {
 /// Primary black button for auth actions (Login, Sign up).
 class BlackButton extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final bool isLoading;
 
   const BlackButton({
     super.key,
     required this.label,
     required this.onPressed,
+    this.isLoading = false,
   });
 
   @override
@@ -115,15 +117,24 @@ class BlackButton extends StatelessWidget {
         ),
         elevation: 0,
       ),
-      onPressed: onPressed,
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
-      ),
+      onPressed: isLoading ? null : onPressed,
+      child: isLoading
+          ? const SizedBox(
+              height: 22,
+              width: 22,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : Text(
+              label,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
     );
   }
 }
@@ -160,7 +171,7 @@ class OrText extends StatelessWidget {
 /// Outlined button for third-party auth (Google).
 class OutlinedGoogleButton extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const OutlinedGoogleButton({
     super.key,

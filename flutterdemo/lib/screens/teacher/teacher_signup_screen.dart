@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
 import '../../services/teacher_auth_service.dart';
+import 'widgets/auth_validators.dart';
 import 'widgets/auth_widgets.dart';
 
 /// Admin Signup (Figma: Team 6 Wireframes > Aishika > "Admin Signup").
@@ -19,6 +20,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -28,27 +30,50 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
     super.dispose();
   }
 
-  void _showMessage(String text) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(text)));
-  }
+  Future<void> _signUp() async {
+    if (_isLoading) return;
 
-  void _signUp() {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
+    // Runs every validator in the Form; shows the error text under each field.
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    // Simulate a network request for 1 second while the spinner shows.
+    await Future.delayed(const Duration(seconds: 1));
+    if (!mounted) return;
+
+    final name = _nameController.text.trim();
     final result = TeacherAuthService.instance.signUp(
-      name: _nameController.text,
+      name: name,
       email: _emailController.text,
       password: _passwordController.text,
     );
-    _showMessage(result.message);
+
+    setState(() => _isLoading = false);
+    showAuthSnackBar(
+      context,
+      result.success
+          ? 'Welcome, $name! Your account has been created.'
+          : result.message,
+      isSuccess: result.success,
+    );
+
     if (result.success) {
-      Navigator.pushReplacementNamed(context, AppRoutes.teacherLogin);
+      // Clear earlier screens so Back can't return to the signup form.
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.teacherDashboard,
+        (route) => false,
+      );
     }
   }
 
   void _googleSignUp() {
-    _showMessage('Google sign-up is not available in this prototype yet.');
+    showAuthSnackBar(
+      context,
+      'Google sign-up is not available in this prototype yet.',
+      isInfo: true,
+    );
   }
 
   @override
@@ -86,24 +111,14 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                       WireframeField(
                         controller: _nameController,
                         hint: 'Name',
-                        validator: (v) => (v == null || v.trim().isEmpty)
-                            ? 'Please enter your name'
-                            : null,
+                        validator: AuthValidators.fullName,
                       ),
                       const SizedBox(height: 22),
                       WireframeField(
                         controller: _emailController,
                         hint: 'Email',
                         keyboardType: TextInputType.emailAddress,
-                        validator: (v) {
-                          final value = v?.trim() ?? '';
-                          if (value.isEmpty) return 'Please enter your email';
-                          if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
-                              .hasMatch(value)) {
-                            return 'Please enter a valid email address';
-                          }
-                          return null;
-                        },
+                        validator: AuthValidators.email,
                       ),
                       const SizedBox(height: 22),
                       WireframeField(
@@ -120,29 +135,29 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                           onPressed: () => setState(
                               () => _obscurePassword = !_obscurePassword),
                         ),
-                        validator: (v) {
-                          final value = v ?? '';
-                          if (value.isEmpty) return 'Please enter a password';
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
+                        validator: AuthValidators.password,
                       ),
                       const SizedBox(height: 32),
-                      BlackButton(label: 'Sign up', onPressed: _signUp),
+                      BlackButton(
+                        label: 'Sign up',
+                        onPressed: _signUp,
+                        isLoading: _isLoading,
+                      ),
                       const OrText(),
                       OutlinedGoogleButton(
                         label: 'Sign up with google',
-                        onPressed: _googleSignUp,
+                        onPressed: _isLoading ? null : _googleSignUp,
                       ),
                       const Spacer(),
                       const SizedBox(height: 24),
                       SwitchAuthLink(
                         prompt: 'Have an account?',
                         action: 'Login',
-                        onTap: () => Navigator.pushReplacementNamed(
-                            context, AppRoutes.teacherLogin),
+                        onTap: () {
+                          if (_isLoading) return;
+                          Navigator.pushReplacementNamed(
+                              context, AppRoutes.teacherLogin);
+                        },
                       ),
                       const SizedBox(height: 16),
                     ],
