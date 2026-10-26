@@ -13,6 +13,34 @@ class CartManagementScreen extends StatefulWidget {
 class _CartManagementScreenState extends State<CartManagementScreen> {
   String _selectedFilter = 'All'; // 'All', 'In Cart', 'Paid'
   String _searchQuery = '';
+  final Set<String> _remindedEmails = {};
+
+  void _sendReminder(Map<String, String> item) {
+    setState(() {
+      _remindedEmails.add(item['email']!);
+    });
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.mark_email_read_rounded, color: Colors.white, size: 20),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Payment reminder sent to ${item['studentName']} (${item['email']})',
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: AppTheme.primary,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
 
   final List<Map<String, String>> _allEnrollments = const [
     {
@@ -241,28 +269,36 @@ class _CartManagementScreenState extends State<CartManagementScreen> {
                                         color: AppTheme.textSecondary,
                                       ),
                                     ),
-                                    if (!isPaid)
-                                      TextButton.icon(
+                                    if (!isPaid) () {
+                                      final bool isReminded =
+                                          _remindedEmails.contains(item['email']);
+                                      return TextButton.icon(
                                         style: TextButton.styleFrom(
                                           padding: EdgeInsets.zero,
                                           minimumSize: const Size(50, 30),
                                           tapTargetSize: MaterialTapTargetSize
                                               .shrinkWrap,
+                                          foregroundColor: isReminded
+                                              ? Colors.green.shade700
+                                              : AppTheme.primary,
                                         ),
-                                        icon: const Icon(Icons.send_rounded,
-                                            size: 14),
-                                        label: const Text('Send Reminder',
-                                            style: TextStyle(fontSize: 12)),
-                                        onPressed: () {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                  'Payment reminder sent to ${item['studentName']}!'),
-                                            ),
-                                          );
-                                        },
-                                      ),
+                                        icon: Icon(
+                                          isReminded
+                                              ? Icons.check_circle_rounded
+                                              : Icons.send_rounded,
+                                          size: 14,
+                                        ),
+                                        label: Text(
+                                          isReminded
+                                              ? 'Reminder Sent'
+                                              : 'Send Reminder',
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                        onPressed: isReminded
+                                            ? null
+                                            : () => _sendReminder(item),
+                                      );
+                                    }(),
                                   ],
                                 ),
                               ],
