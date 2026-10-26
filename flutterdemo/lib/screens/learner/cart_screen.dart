@@ -93,7 +93,7 @@ class _CartScreenState extends State<CartScreen> {
                                   width: 52,
                                   height: 52,
                                   decoration: BoxDecoration(
-                                    color: AppTheme.primary.withOpacity(0.1),
+                                    color: AppTheme.primary.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(
