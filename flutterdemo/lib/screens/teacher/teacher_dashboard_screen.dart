@@ -4,55 +4,88 @@ import '../../routes/app_routes.dart';
 import '../../theme/app_theme.dart';
 
 // ======================================================================
-// 1. DATA MODEL - holds the 3 dashboard numbers (no hardcoded UI values)
-//    Tip: you can later move this to lib/models/dashboard_metrics.dart
+// 1. DATA MODELS
 // ======================================================================
-class DashboardMetrics {
-  final int activePrograms;
-  final int totalLearners;
-  final double totalRevenue;
 
-  const DashboardMetrics({
-    required this.activePrograms,
-    required this.totalLearners,
-    required this.totalRevenue,
+/// One course's enrollment numbers (drives the progress bars)
+class CourseEnrollment {
+  final String name;
+  final int enrolled;
+  final int capacity;
+
+  const CourseEnrollment({
+    required this.name,
+    required this.enrolled,
+    required this.capacity,
   });
 
-  // Ready for a real API / JSON response later
+  factory CourseEnrollment.fromJson(Map<String, dynamic> json) {
+    return CourseEnrollment(
+      name: json['name'] as String,
+      enrolled: json['enrolled'] as int,
+      capacity: json['capacity'] as int,
+    );
+  }
+
+  // 0.0 to 1.0 for the progress bar
+  double get progress => capacity == 0 ? 0 : (enrolled / capacity).clamp(0, 1);
+}
+
+/// The 3 KPI numbers + the per-course breakdown
+class DashboardMetrics {
+  final double totalEarnings;
+  final int activeStudents;
+  final double courseRating;
+  final List<CourseEnrollment> courses;
+
+  const DashboardMetrics({
+    required this.totalEarnings,
+    required this.activeStudents,
+    required this.courseRating,
+    required this.courses,
+  });
+
   factory DashboardMetrics.fromJson(Map<String, dynamic> json) {
     return DashboardMetrics(
-      activePrograms: json['activePrograms'] as int,
-      totalLearners: json['totalLearners'] as int,
-      totalRevenue: (json['totalRevenue'] as num).toDouble(),
+      totalEarnings: (json['totalEarnings'] as num).toDouble(),
+      activeStudents: json['activeStudents'] as int,
+      courseRating: (json['courseRating'] as num).toDouble(),
+      courses: (json['courses'] as List)
+          .map((c) => CourseEnrollment.fromJson(c as Map<String, dynamic>))
+          .toList(),
     );
   }
 }
 
 // ======================================================================
-// 2. MOCK SERVICE - pretends to call an API (1 second delay).
-//    First call returns your original numbers (4 / 360 / 14,250);
-//    later calls change slightly so you can SEE refresh working.
+// 2. MOCK SERVICE (pretends to be an API, 1 second delay)
+//    First load = $12,450 / 1,280 / 4.8. Refreshes change slightly.
 // ======================================================================
 class DashboardService {
   static int _calls = 0;
 
+  // Used by tests so every test starts from the "first load" numbers
+  static void reset() => _calls = 0;
+
   static Future<DashboardMetrics> fetchMetrics() async {
     await Future.delayed(const Duration(seconds: 1));
     _calls++;
-    final rnd = Random();
-    final json = {
-      'activePrograms': 4 + (_calls > 1 ? rnd.nextInt(3) : 0),
-      'totalLearners': 360 + (_calls > 1 ? rnd.nextInt(40) : 0),
-      'totalRevenue': 14250.0 + (_calls > 1 ? rnd.nextInt(1500) : 0),
-    };
-    return DashboardMetrics.fromJson(json);
+    final bump = _calls > 1 ? Random().nextInt(5) + 1 : 0;
+    return DashboardMetrics.fromJson({
+      'totalEarnings': 12450.0 + bump * 45,
+      'activeStudents': 1280 + bump,
+      'courseRating': 4.8,
+      'courses': [
+        {'name': 'Mobile Dev with Flutter', 'enrolled': 420 + bump, 'capacity': 500},
+        {'name': 'AI & Machine Learning', 'enrolled': 360, 'capacity': 450},
+        {'name': 'UI/UX Design', 'enrolled': 280, 'capacity': 400},
+        {'name': 'Cloud Computing', 'enrolled': 220, 'capacity': 350},
+      ],
+    });
   }
 }
 
-/// Screen 12: Teacher Dashboard
-/// Welcome header, 3 DYNAMIC metric cards (loaded from a data model),
-/// pull-to-refresh, and two quick actions.
-/// StatefulWidget = a screen that can change (numbers load and refresh).
+/// Screen 12: Teacher Dashboard (Week 4: analytics + KPI polish)
 class TeacherDashboardScreen extends StatefulWidget {
   const TeacherDashboardScreen({super.key});
 
@@ -69,7 +102,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
     _metricsFuture = DashboardService.fetchMetrics();
   }
 
-  // Used by pull-to-refresh, the reload icon and the Retry button
+  // Pull-to-refresh, reload icon and Retry button all use this
   Future<void> _reload() async {
     final newFuture = DashboardService.fetchMetrics();
     setState(() => _metricsFuture = newFuture);
@@ -81,12 +114,10 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
         );
       }
     } catch (_) {
-      // the error UI is shown by the FutureBuilder
+      // error UI is shown by the FutureBuilder
     }
   }
 
-  // Logout: go back to Role Selection and clear all earlier screens,
-  // so the Back button can't return to the dashboard.
   void _logout(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(
       context,
@@ -95,33 +126,42 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
     );
   }
 
-  // 14250 -> $14,250
-  String _formatMoney(double v) {
-    final s = v.toStringAsFixed(0);
-    final withCommas =
-        s.replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',');
-    return '\$$withCommas';
+  // 12450 -> 12,450
+  String _commas(num v) {
+    return v.toStringAsFixed(0).replaceAllMapped(
+        RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => ',');
   }
 
-  // The 3 metric cards, built from the loaded model
-  Widget _buildMetrics(DashboardMetrics m) {
+  Widget _sectionTitle(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: AppTheme.textPrimary,
+      ),
+    );
+  }
+
+  // The 3 KPI cards
+  Widget _buildKpis(DashboardMetrics m) {
     return Column(
       children: [
         Row(
           children: [
             Expanded(
-              child: _MetricCard(
-                title: 'Active Programs',
-                value: '${m.activePrograms}',
-                icon: Icons.layers_rounded,
-                color: AppTheme.primary,
+              child: _KpiCard(
+                title: 'Total Earnings',
+                value: '\$${_commas(m.totalEarnings)}',
+                icon: Icons.account_balance_wallet_rounded,
+                color: AppTheme.success,
               ),
             ),
             const SizedBox(width: 14),
             Expanded(
-              child: _MetricCard(
-                title: 'Total Learners',
-                value: '${m.totalLearners}',
+              child: _KpiCard(
+                title: 'Active Students',
+                value: _commas(m.activeStudents),
                 icon: Icons.people_alt_rounded,
                 color: AppTheme.accent,
               ),
@@ -129,13 +169,66 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
           ],
         ),
         const SizedBox(height: 14),
-        _MetricCard(
-          title: 'Total Revenue Earned',
-          value: _formatMoney(m.totalRevenue),
-          icon: Icons.account_balance_wallet_rounded,
-          color: AppTheme.success,
+        _KpiCard(
+          title: 'Course Rating',
+          value: '${m.courseRating.toStringAsFixed(1)} ★',
+          icon: Icons.star_rounded,
+          color: AppTheme.primary,
         ),
       ],
+    );
+  }
+
+  // Course-wise enrollment progress bars
+  Widget _buildEnrollment(DashboardMetrics m) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        children: [
+          for (int i = 0; i < m.courses.length; i++) ...[
+            _EnrollmentRow(course: m.courses[i]),
+            if (i != m.courses.length - 1) const SizedBox(height: 16),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildError() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        children: [
+          const Icon(Icons.error_outline_rounded, size: 48, color: Colors.red),
+          const SizedBox(height: 10),
+          const Text(
+            'Could not load your dashboard stats.',
+            style: TextStyle(color: AppTheme.textSecondary),
+          ),
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primary,
+              foregroundColor: Colors.white,
+            ),
+            icon: const Icon(Icons.refresh_rounded),
+            label: const Text('Retry'),
+            onPressed: _reload,
+          ),
+        ],
+      ),
     );
   }
 
@@ -143,17 +236,15 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        // RefreshIndicator = pull down to reload
         child: RefreshIndicator(
           onRefresh: _reload,
           child: SingleChildScrollView(
-            // Always scrollable so pull-to-refresh works even on tall screens
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ---------- 1. HEADER: avatar + greeting + reload + logout ----------
+                // ---------- 1. HEADER ----------
                 Row(
                   children: [
                     const CircleAvatar(
@@ -200,77 +291,41 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                 ),
                 const SizedBox(height: 28),
 
-                // ---------- 2. METRIC CARDS (dynamic) ----------
-                const Text(
-                  'Overview',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 14),
-
-                // FutureBuilder rebuilds this part for each state:
-                // loading -> spinner, error -> retry, success -> cards
+                // ---------- 2 + 3. KPI CARDS and ENROLLMENT BARS ----------
+                // One FutureBuilder feeds both sections
                 FutureBuilder<DashboardMetrics>(
                   future: _metricsFuture,
                   builder: (context, snapshot) {
-                    // LOADING
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const SizedBox(
-                        height: 180,
+                        height: 260,
                         child: Center(child: CircularProgressIndicator()),
                       );
                     }
-                    // ERROR
                     if (snapshot.hasError || !snapshot.hasData) {
-                      return Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey.shade200),
-                        ),
-                        child: Column(
-                          children: [
-                            const Icon(Icons.error_outline_rounded,
-                                size: 48, color: Colors.red),
-                            const SizedBox(height: 10),
-                            const Text(
-                              'Could not load your dashboard stats.',
-                              style: TextStyle(
-                                  color: AppTheme.textSecondary),
-                            ),
-                            const SizedBox(height: 12),
-                            ElevatedButton.icon(
-                              icon: const Icon(Icons.refresh_rounded),
-                              label: const Text('Retry'),
-                              onPressed: _reload,
-                            ),
-                          ],
-                        ),
-                      );
+                      return _buildError();
                     }
-                    // SUCCESS
-                    return _buildMetrics(snapshot.data!);
+                    final m = snapshot.data!;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _sectionTitle('Overview'),
+                        const SizedBox(height: 14),
+                        _buildKpis(m),
+                        const SizedBox(height: 28),
+                        _sectionTitle('Enrollment Performance'),
+                        const SizedBox(height: 14),
+                        _buildEnrollment(m),
+                      ],
+                    );
                   },
                 ),
                 const SizedBox(height: 28),
 
-                // ---------- 3. QUICK ACTIONS ----------
-                const Text(
-                  'Quick Actions',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary,
-                  ),
-                ),
+                // ---------- 4. QUICK ACTIONS ----------
+                _sectionTitle('Quick Actions'),
                 const SizedBox(height: 14),
 
-                // Action 1: opens Screen 13 (Cart Management)
                 Card(
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(
@@ -294,10 +349,14 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Action 2: Create New Program button (placeholder for now)
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
                     icon: const Icon(Icons.add_circle_outline_rounded),
                     label: const Text('Create New Program'),
                     onPressed: () {
@@ -318,15 +377,14 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   }
 }
 
-/// One reusable stat card (icon, big number, label).
-/// Built once here and used three times above, so we don't repeat code.
-class _MetricCard extends StatelessWidget {
+/// One KPI card (icon, big value, label)
+class _KpiCard extends StatelessWidget {
   final String title;
   final String value;
   final IconData icon;
   final Color color;
 
-  const _MetricCard({
+  const _KpiCard({
     required this.title,
     required this.value,
     required this.icon,
@@ -370,6 +428,54 @@ class _MetricCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// One course row: name, "enrolled / capacity", and a progress bar
+class _EnrollmentRow extends StatelessWidget {
+  final CourseEnrollment course;
+
+  const _EnrollmentRow({required this.course});
+
+  @override
+  Widget build(BuildContext context) {
+    final percent = (course.progress * 100).round();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                course.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+            ),
+            Text(
+              '${course.enrolled}/${course.capacity} ($percent%)',
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppTheme.textSecondary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: LinearProgressIndicator(
+            value: course.progress,
+            minHeight: 8,
+            backgroundColor: Colors.grey.shade200,
+            valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primary),
+          ),
+        ),
+      ],
     );
   }
 }
