@@ -12,6 +12,10 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  final TextEditingController _promoController =
+TextEditingController();
+
+bool _isPromoApplied = false;
   // Sample Cart Items
   final List<Map<String, dynamic>> _cartItems = [
     {
@@ -34,9 +38,11 @@ class _CartScreenState extends State<CartScreen> {
       _cartItems.fold(0.0, (sum, item) => sum + (item['price'] as double));
 
   double get _discount => _cartItems.isEmpty ? 0.0 : 5.00;
-
-  double get _total => (_subtotal - _discount).clamp(0.0, double.infinity);
-
+  double get _promoDiscount => _isPromoApplied ? _subtotal * 0.10 : 0.0;
+  double get _total => 
+                       (_subtotal - _discount - _promoDiscount)
+.clamp(0.0, double.infinity); 
+                        
   void _removeItem(int index) {
     setState(() {
       _cartItems.removeAt(index);
@@ -48,7 +54,28 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
+void _applyPromoCode() {
+final code = _promoController.text.trim().toUpperCase();
 
+setState(() {
+_isPromoApplied = code == 'EXCELERATE10';
+});
+
+ScaffoldMessenger.of(context).showSnackBar(
+SnackBar(
+content: Text(
+_isPromoApplied
+? 'Promo code applied! 10% discount added.'
+: 'Invalid promo code',
+),
+),
+);
+}
+@override
+void dispose() {
+_promoController.dispose();
+super.dispose();
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +104,7 @@ class _CartScreenState extends State<CartScreen> {
                   Expanded(
                     child: ListView.separated(
                       itemCount: _cartItems.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      separatorBuilder: (_, _) => const SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final item = _cartItems[index];
                         return Card(
@@ -160,7 +187,7 @@ class _CartScreenState extends State<CartScreen> {
                       border: Border.all(color: Colors.grey.shade200),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: Colors.black.withValues(alpha: 0.04),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -168,6 +195,29 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                     child: Column(
                       children: [
+                        Padding(
+padding: const EdgeInsets.only(bottom: 16),
+child: Row(
+children: [
+Expanded(
+child: TextField(
+controller: _promoController,
+decoration: const InputDecoration(
+labelText: 'Promo Code',
+hintText: 'Enter coupon code',
+border: OutlineInputBorder(),
+),
+),
+),
+const SizedBox(width: 10),
+ElevatedButton(
+onPressed: _applyPromoCode,
+child: const Text('Apply'),
+),
+],
+),
+),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
