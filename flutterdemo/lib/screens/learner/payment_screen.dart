@@ -67,7 +67,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     // Simulate payment gateway authorization delay
     await Future.delayed(const Duration(milliseconds: 1200));
-
     if (!mounted) return;
     setState(() => _isProcessing = false);
 
