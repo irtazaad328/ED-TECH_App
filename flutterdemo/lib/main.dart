@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'routes/app_routes.dart';
+import 'models/user_profile.dart';
 import 'screens/common/login_screen.dart';
+import 'screens/common/profile_settings_screen.dart';
 import 'screens/common/role_selection_screen.dart';
 import 'screens/common/signup_screen.dart';
 import 'screens/learner/cart_screen.dart';
@@ -42,6 +44,12 @@ class EdTechApp extends StatelessWidget {
         AppRoutes.payment: (context) => const PaymentScreen(),
         AppRoutes.teacherDashboard: (context) => const TeacherDashboardScreen(),
         AppRoutes.cartManagement: (context) => const CartManagementScreen(),
+        AppRoutes.profile: (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          final profile =
+              (args is UserProfile) ? args : UserProfile.learnerDemo;
+          return ProfileSettingsScreen(profile: profile);
+        },
       },
     );
   }

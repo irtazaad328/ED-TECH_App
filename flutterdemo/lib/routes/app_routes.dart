@@ -16,4 +16,8 @@ class AppRoutes {
   static const String teacherSignup = '/teacher_signup';
   static const String teacherDashboard = '/teacher_dashboard';
   static const String cartManagement = '/cart_management';
+
+  // Common & Feedback routes
+  static const String profile = '/profile';
+  static const String feedback = '/feedback';
 }
