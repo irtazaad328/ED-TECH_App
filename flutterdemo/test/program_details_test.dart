@@ -116,7 +116,7 @@ void main() {
     expect(find.text('Add to Cart'), findsOneWidget);
 
     // Enrol while the screen is open: the UI should update live.
-    EnrollmentService.instance.enroll('p1');
+    EnrollmentService.instance.enroll(Program.fromJson({'id': 'p1'}));
     await tester.pumpAndSettle();
 
     // Badge on the banner + status in the bottom bar.
@@ -225,7 +225,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byIcon(Icons.lock_outline), findsOneWidget); // 'Setup'
 
-    EnrollmentService.instance.enroll('p9');
+    EnrollmentService.instance.enroll(syllabusProgram);
     await tester.pumpAndSettle();
     expect(find.byIcon(Icons.lock_outline), findsNothing);
     expect(find.text('Preview'), findsNothing);

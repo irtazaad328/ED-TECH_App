@@ -26,8 +26,6 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen> {
   int? _expandedModule;
 
   final EnrollmentService _enrollment = EnrollmentService.instance;
-  late final Listenable _enrollmentChanges =
-      Listenable.merge([_enrollment.enrolledIds, _enrollment.cartIds]);
 
   static const List<SyllabusModule> _defaultSyllabus = [
     SyllabusModule(
@@ -128,9 +126,26 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen> {
             ? program.syllabus
             : _defaultSyllabus;
 
+    // The program that goes into the cart (fallback values when the screen
+    // is opened without a Program, e.g. from the Home featured card).
+    final Program cartProgram = program ??
+        Program(
+          id: programId,
+          title: title,
+          teacherName: teacherName,
+          category: category,
+          price: price,
+          rating: rating,
+          studentsEnrolled: studentsEnrolled,
+          description: description,
+          whatIsIncluded: whatIsIncluded,
+          imageUrl: '',
+          syllabus: syllabus,
+        );
+
     // Rebuild whenever enrolment or cart state changes.
     return AnimatedBuilder(
-      animation: _enrollmentChanges,
+      animation: _enrollment.changes,
       builder: (context, _) {
         final bool isEnrolled = _enrollment.isEnrolled(programId);
         final bool isInCart = _enrollment.isInCart(programId);
@@ -244,7 +259,7 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen> {
             ),
           ),
           bottomNavigationBar: _buildBottomBar(
-            programId: programId,
+            program: cartProgram,
             title: title,
             price: price,
             isEnrolled: isEnrolled,
@@ -525,7 +540,7 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen> {
   // ---------------------------------------------------------------------------
 
   Widget _buildBottomBar({
-    required String programId,
+    required Program program,
     required String title,
     required double price,
     required bool isEnrolled,
@@ -593,7 +608,7 @@ class _ProgramDetailsScreenState extends State<ProgramDetailsScreen> {
         icon: const Icon(Icons.shopping_cart_outlined, size: 18),
         label: const Text('Add to Cart'),
         onPressed: () {
-          _enrollment.addToCart(programId);
+          _enrollment.addToCart(program);
           _showSnack('Added "$title" to your cart!');
           Navigator.pushNamed(context, AppRoutes.cart);
         },

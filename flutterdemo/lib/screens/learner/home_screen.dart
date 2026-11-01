@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../models/program_model.dart';
 import '../../routes/app_routes.dart';
+import '../../services/enrollment_service.dart';
 import '../../theme/app_theme.dart';
 
 class LearnerHomeScreen extends StatefulWidget {
@@ -49,10 +51,17 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
       appBar: AppBar(
         title: const Text('Ed Tech'),
         actions: [
-          IconButton(
-            tooltip: 'Cart',
-            icon: const Icon(Icons.shopping_cart_outlined),
-            onPressed: () => Navigator.pushNamed(context, AppRoutes.cart),
+          ValueListenableBuilder<List<Program>>(
+            valueListenable: EnrollmentService.instance.cart,
+            builder: (context, cart, _) => IconButton(
+              tooltip: 'Cart',
+              icon: Badge(
+                isLabelVisible: cart.isNotEmpty,
+                label: Text('${cart.length}'),
+                child: const Icon(Icons.shopping_cart_outlined),
+              ),
+              onPressed: () => Navigator.pushNamed(context, AppRoutes.cart),
+            ),
           ),
           IconButton(
             tooltip: 'Logout',
@@ -133,6 +142,13 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
             ),
             const SizedBox(height: 28),
 
+            // My Programs: everything the learner has paid for
+            ValueListenableBuilder<List<Program>>(
+              valueListenable: EnrollmentService.instance.enrolled,
+              builder: (context, enrolled, _) =>
+                  _buildMyPrograms(context, enrolled),
+            ),
+
             // Section Header: Featured Programs
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -204,6 +220,94 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.logout_rounded), label: 'Logout'),
         ],
       ),
+    );
+  }
+
+  /// Same category icons as the Programs list and Program Details screens.
+  IconData _iconFor(String category) {
+    switch (category) {
+      case 'Mobile Dev':
+        return Icons.phone_iphone_rounded;
+      case 'Artificial Intelligence':
+        return Icons.psychology_rounded;
+      case 'UI/UX Design':
+        return Icons.design_services_rounded;
+      case 'Cloud':
+      case 'Cloud Computing':
+        return Icons.cloud_rounded;
+      default:
+        return Icons.school_rounded;
+    }
+  }
+
+  Widget _buildMyPrograms(BuildContext context, List<Program> enrolled) {
+    if (enrolled.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'My Programs (${enrolled.length})',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 12),
+        ...enrolled.map(
+          (program) => Card(
+            margin: const EdgeInsets.only(bottom: 10),
+            child: ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              leading: SizedBox(
+                width: 50,
+                height: 50,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: 46,
+                      height: 46,
+                      decoration: BoxDecoration(
+                        color: AppTheme.accent.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(_iconFor(program.category),
+                          color: AppTheme.accent, size: 26),
+                    ),
+                    // Small green tick = enrolled
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.check_circle_rounded,
+                            color: AppTheme.success, size: 18),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              title: Text(
+                program.title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text('By ${program.teacherName}  •  Enrolled'),
+              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+              onTap: () => Navigator.pushNamed(
+                context,
+                AppRoutes.programDetails,
+                arguments: program,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 18),
+      ],
     );
   }
 }
