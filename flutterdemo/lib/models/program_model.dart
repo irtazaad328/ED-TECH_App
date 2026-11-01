@@ -9,6 +9,7 @@ class Program {
   final String description;
   final List<String> whatIsIncluded;
   final String imageUrl;
+  final List<SyllabusModule> syllabus;
 
   const Program({
     required this.id,
@@ -21,6 +22,7 @@ class Program {
     required this.description,
     required this.whatIsIncluded,
     required this.imageUrl,
+    this.syllabus = const [],
   });
 
   factory Program.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,9 @@ class Program {
       description: json['description'] ?? '',
       whatIsIncluded: List<String>.from(json['whatIsIncluded'] ?? []),
       imageUrl: json['imageUrl'] ?? '',
+      syllabus: (json['syllabus'] as List<dynamic>? ?? [])
+          .map((m) => SyllabusModule.fromJson(m as Map<String, dynamic>))
+          .toList(),
     );
   }
 
@@ -50,6 +55,36 @@ class Program {
       'description': description,
       'whatIsIncluded': whatIsIncluded,
       'imageUrl': imageUrl,
+      'syllabus': syllabus.map((m) => m.toJson()).toList(),
+    };
+  }
+}
+
+/// One module (week / unit) of a program's syllabus.
+class SyllabusModule {
+  final String title;
+  final String duration;
+  final List<String> lessons;
+
+  const SyllabusModule({
+    required this.title,
+    required this.duration,
+    required this.lessons,
+  });
+
+  factory SyllabusModule.fromJson(Map<String, dynamic> json) {
+    return SyllabusModule(
+      title: json['title'] ?? '',
+      duration: json['duration'] ?? '',
+      lessons: List<String>.from(json['lessons'] ?? []),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'duration': duration,
+      'lessons': lessons,
     };
   }
 }
