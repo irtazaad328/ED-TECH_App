@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../models/program_model.dart';
 import '../../routes/app_routes.dart';
+import '../../services/enrollment_service.dart';
 import '../../theme/app_theme.dart';
 
 /// Screen 7: My Cart Screen (Learner Flow)
@@ -12,35 +14,36 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  // Sample Cart Items
-  final List<Map<String, dynamic>> _cartItems = [
-    {
-      'id': 'p1',
-      'title': 'Flutter Mobile App Development',
-      'teacher': 'Jerry Mentor',
-      'price': 49.99,
-      'icon': Icons.flutter_dash,
-    },
-    {
-      'id': 'p2',
-      'title': 'Prompt Engineering & Research',
-      'teacher': 'Laviza Mentor',
-      'price': 39.99,
-      'icon': Icons.psychology_rounded,
-    },
-  ];
+  final EnrollmentService _enrollment = EnrollmentService.instance;
 
-  double get _subtotal =>
-      _cartItems.fold(0.0, (sum, item) => sum + (item['price'] as double));
+  /// The programs the learner has actually added (shared with Program Details
+  /// and Payment through [EnrollmentService]).
+  List<Program> get _cartItems => _enrollment.cart.value;
+
+  double get _subtotal => _enrollment.cartSubtotal;
 
   double get _discount => _cartItems.isEmpty ? 0.0 : 5.00;
 
   double get _total => (_subtotal - _discount).clamp(0.0, double.infinity);
 
+  IconData _iconFor(String category) {
+    switch (category) {
+      case 'Mobile Dev':
+        return Icons.flutter_dash;
+      case 'Artificial Intelligence':
+        return Icons.psychology_rounded;
+      case 'UI/UX Design':
+        return Icons.design_services_rounded;
+      case 'Cloud':
+      case 'Cloud Computing':
+        return Icons.cloud_rounded;
+      default:
+        return Icons.school_rounded;
+    }
+  }
+
   void _removeItem(int index) {
-    setState(() {
-      _cartItems.removeAt(index);
-    });
+    _enrollment.removeFromCart(_cartItems[index].id);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Item removed from cart'),
@@ -51,6 +54,13 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return ValueListenableBuilder<List<Program>>(
+      valueListenable: _enrollment.cart,
+      builder: (context, _, __) => _buildCart(context),
+    );
+  }
+
+  Widget _buildCart(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Cart'),
@@ -97,7 +107,7 @@ class _CartScreenState extends State<CartScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(
-                                    item['icon'] as IconData,
+                                    _iconFor(item.category),
                                     color: AppTheme.primary,
                                     size: 28,
                                   ),
@@ -108,7 +118,7 @@ class _CartScreenState extends State<CartScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        item['title'],
+                                        item.title,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,
@@ -117,7 +127,7 @@ class _CartScreenState extends State<CartScreen> {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        'By ${item['teacher']}',
+                                        'By ${item.teacherName}',
                                         style: const TextStyle(
                                           fontSize: 12,
                                           color: AppTheme.textSecondary,
@@ -125,7 +135,7 @@ class _CartScreenState extends State<CartScreen> {
                                       ),
                                       const SizedBox(height: 6),
                                       Text(
-                                        '\$${(item['price'] as double).toStringAsFixed(2)}',
+                                        '\$${item.price.toStringAsFixed(2)}',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,

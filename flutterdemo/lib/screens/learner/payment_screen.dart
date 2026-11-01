@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
+import '../../services/enrollment_service.dart';
 import '../../theme/app_theme.dart';
 
 /// Screen 8: Payment Screen (Learner Flow)
@@ -70,6 +71,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     if (!mounted) return;
     setState(() => _isProcessing = false);
+
+    // Payment succeeded: everything in the cart is now an enrolled program.
+    EnrollmentService.instance.checkoutCart();
 
     String paymentDetail = '';
     if (_selectedMethod == 0) {

@@ -14,7 +14,45 @@
       "Real-world Portfolio Projects",
       "Weekly Action Meeting Reviews"
     ],
-    "imageUrl": "assets/images/flutter_course.png"
+    "imageUrl": "assets/images/flutter_course.png",
+    "syllabus": [
+      {
+        "title": "Module 1: Dart Essentials",
+        "duration": "3h 20m",
+        "lessons": [
+          "Variables, types & null safety",
+          "Functions, classes & mixins",
+          "Async programming with Futures & Streams"
+        ]
+      },
+      {
+        "title": "Module 2: Flutter UI Fundamentals",
+        "duration": "5h 45m",
+        "lessons": [
+          "Widgets, layouts & the widget tree",
+          "Material 3 theming",
+          "Responsive design for phones & tablets"
+        ]
+      },
+      {
+        "title": "Module 3: Navigation & State",
+        "duration": "6h 10m",
+        "lessons": [
+          "Named routes & passing arguments",
+          "setState, InheritedWidget & Provider",
+          "Forms & input validation"
+        ]
+      },
+      {
+        "title": "Module 4: Data & Deployment",
+        "duration": "4h 30m",
+        "lessons": [
+          "Loading JSON & REST APIs",
+          "Widget & unit testing",
+          "Publishing to Play Store & App Store"
+        ]
+      }
+    ]
   },
   {
     "id": "p2",
@@ -30,7 +68,36 @@
       "Automated Testing Templates",
       "Peer Evaluation Workflows"
     ],
-    "imageUrl": "assets/images/ai_course.png"
+    "imageUrl": "assets/images/ai_course.png",
+    "syllabus": [
+      {
+        "title": "Module 1: Prompt Foundations",
+        "duration": "2h 15m",
+        "lessons": [
+          "How large language models read prompts",
+          "Roles, context & constraints",
+          "Zero-shot vs few-shot prompting"
+        ]
+      },
+      {
+        "title": "Module 2: Structured Frameworks",
+        "duration": "3h 40m",
+        "lessons": [
+          "RACE & CREATE frameworks",
+          "Chain-of-thought and step decomposition",
+          "Prompt templates for research tasks"
+        ]
+      },
+      {
+        "title": "Module 3: Evaluation & Responsible AI",
+        "duration": "3h 05m",
+        "lessons": [
+          "Output evaluation metrics",
+          "Automated prompt testing",
+          "Bias, safety & citation practices"
+        ]
+      }
+    ]
   },
   {
     "id": "p3",
@@ -46,7 +113,33 @@
       "Mobile Component Library",
       "Heuristic Evaluation Guide"
     ],
-    "imageUrl": "assets/images/figma_course.png"
+    "imageUrl": "assets/images/figma_course.png",
+    "syllabus": [
+      {
+        "title": "Module 1: UX Research",
+        "duration": "2h 30m",
+        "lessons": [
+          "User personas & journey maps",
+          "Heuristic evaluation"
+        ]
+      },
+      {
+        "title": "Module 2: Wireframing in Figma",
+        "duration": "3h 10m",
+        "lessons": [
+          "Frames, grids & auto layout",
+          "Low-fidelity mobile wireframes"
+        ]
+      },
+      {
+        "title": "Module 3: High-Fidelity Prototypes",
+        "duration": "4h 00m",
+        "lessons": [
+          "Components & variants",
+          "Interactive prototyping & handoff"
+        ]
+      }
+    ]
   },
   {
     "id": "p4",
@@ -62,6 +155,40 @@
       "Deployment Pipeline Templates",
       "Cloud Security Checklist"
     ],
-    "imageUrl": "assets/images/cloud_course.png"
+    "imageUrl": "assets/images/cloud_course.png",
+    "syllabus": [
+      {
+        "title": "Module 1: Cloud Concepts",
+        "duration": "2h 00m",
+        "lessons": [
+          "IaaS, PaaS & SaaS",
+          "Regions, availability & pricing"
+        ]
+      },
+      {
+        "title": "Module 2: AWS Core Services",
+        "duration": "4h 20m",
+        "lessons": [
+          "EC2, S3 & IAM",
+          "Serverless with Lambda"
+        ]
+      },
+      {
+        "title": "Module 3: Firebase for Mobile",
+        "duration": "3h 30m",
+        "lessons": [
+          "Auth, Firestore & Storage",
+          "Cloud Functions"
+        ]
+      },
+      {
+        "title": "Module 4: CI/CD & Security",
+        "duration": "2h 45m",
+        "lessons": [
+          "Build pipelines for mobile apps",
+          "Cloud security checklist"
+        ]
+      }
+    ]
   }
 ]
