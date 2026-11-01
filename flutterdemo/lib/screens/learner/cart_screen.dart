@@ -17,14 +17,44 @@ class _CartScreenState extends State<CartScreen> {
   final EnrollmentService _enrollment = EnrollmentService.instance;
 
   /// The programs the learner has actually added (shared with Program Details
+  final TextEditingController _promoController = TextEditingController();
+  bool _isPromoApplied = false;
+
+  /// The programs the learner has actually added (shared with Program Details
   /// and Payment through [EnrollmentService]).
   List<Program> get _cartItems => _enrollment.cart.value;
 
   double get _subtotal => _enrollment.cartSubtotal;
 
   double get _discount => _cartItems.isEmpty ? 0.0 : 5.00;
+  double get _promoDiscount => _isPromoApplied ? _subtotal * 0.10 : 0.0;
 
-  double get _total => (_subtotal - _discount).clamp(0.0, double.infinity);
+  double get _total =>
+      (_subtotal - _discount - _promoDiscount).clamp(0.0, double.infinity);
+
+  void _applyPromoCode() {
+    final code = _promoController.text.trim().toUpperCase();
+    setState(() {
+      _isPromoApplied = code == 'EXCELERATE10';
+    });
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          _isPromoApplied
+              ? 'Promo code applied! 10% discount added.'
+              : 'Invalid promo code',
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _promoController.dispose();
+    super.dispose();
+  }
 
   IconData _iconFor(String category) {
     switch (category) {
@@ -178,6 +208,28 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                     child: Column(
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _promoController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Promo Code',
+                                    hintText: 'Enter coupon code',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              ElevatedButton(
+                                onPressed: _applyPromoCode,
+                                child: const Text('Apply'),
+                              ),
+                            ],
+                          ),
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -203,6 +255,22 @@ class _CartScreenState extends State<CartScreen> {
                                     fontSize: 15)),
                           ],
                         ),
+                        if (_isPromoApplied) ...[
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Coupon (10% OFF)',
+                                  style: TextStyle(
+                                      color: AppTheme.textSecondary, fontSize: 14)),
+                              Text('-\$${_promoDiscount.toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                      color: AppTheme.success,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15)),
+                            ],
+                          ),
+                        ],
                         const Divider(height: 24),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
