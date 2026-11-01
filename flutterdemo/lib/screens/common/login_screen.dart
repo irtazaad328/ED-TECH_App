@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
+import '../../services/enrollment_service.dart';
 import '../../theme/app_theme.dart';
 
 /// Screen 2 & 10: Login Screen (Learner & Teacher Flow)
@@ -57,6 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
       if (widget.isTeacher) {
         Navigator.pushReplacementNamed(context, AppRoutes.teacherDashboard);
       } else {
+        // Load this learner's own cart & enrolled programs.
+        EnrollmentService.instance.signIn(_emailController.text);
         Navigator.pushReplacementNamed(context, AppRoutes.learnerHome);
       }
     }

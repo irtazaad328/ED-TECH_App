@@ -31,6 +31,7 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
               onPressed: () {
                 Navigator.pop(context); // close dialog
+                EnrollmentService.instance.signOut();
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   AppRoutes.roleSelection,
@@ -76,9 +77,9 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Welcome Greeting
-            const Text(
-              'Hello, Student! 👋',
-              style: TextStyle(
+            Text(
+              'Hello, ${_displayName()}! 👋',
+              style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimary,
@@ -221,6 +222,13 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
         ],
       ),
     );
+  }
+
+  /// "std@gmail.com" -> "std"; falls back to "Student" when nobody signed in.
+  String _displayName() {
+    final email = EnrollmentService.instance.currentUser;
+    if (email == null || email.isEmpty) return 'Student';
+    return email.split('@').first;
   }
 
   /// Same category icons as the Programs list and Program Details screens.

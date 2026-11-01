@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
+import '../../services/enrollment_service.dart';
 import '../../theme/app_theme.dart';
 
 /// Screen 3 & 11: Signup Screen (Learner & Teacher Flow)
@@ -84,6 +85,8 @@ class _SignupScreenState extends State<SignupScreen> {
           (route) => false,
         );
       } else {
+        // New learner starts with an empty cart and no programs.
+        EnrollmentService.instance.signIn(_emailController.text);
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppRoutes.learnerHome,
