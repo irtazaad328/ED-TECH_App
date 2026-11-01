@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/program_model.dart';
+import '../../models/user_profile.dart';
 import '../../routes/app_routes.dart';
 import '../../services/enrollment_service.dart';
 import '../../theme/app_theme.dart';
@@ -63,6 +64,33 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
               ),
               onPressed: () => Navigator.pushNamed(context, AppRoutes.cart),
             ),
+          ),
+          IconButton(
+            tooltip: 'Feedback',
+            icon: const Icon(Icons.rate_review_outlined),
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.feedback),
+          ),
+          IconButton(
+            tooltip: 'Profile',
+            icon: const Icon(Icons.person_outline_rounded),
+            onPressed: () {
+              final email = EnrollmentService.instance.currentUser;
+              final name = (email != null && email.isNotEmpty)
+                  ? email.split('@').first
+                  : 'Student User';
+              Navigator.pushNamed(
+                context,
+                AppRoutes.profile,
+                arguments: UserProfile(
+                  name: name,
+                  email: (email != null && email.isNotEmpty)
+                      ? email
+                      : 'student@edtech.com',
+                  isTeacher: false,
+                  courseCount: EnrollmentService.instance.enrolled.value.length,
+                ),
+              );
+            },
           ),
           IconButton(
             tooltip: 'Logout',

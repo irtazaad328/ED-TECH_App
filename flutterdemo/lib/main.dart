@@ -6,6 +6,7 @@ import 'screens/common/profile_settings_screen.dart';
 import 'screens/common/role_selection_screen.dart';
 import 'screens/common/signup_screen.dart';
 import 'screens/learner/cart_screen.dart';
+import 'screens/learner/feedback_screen.dart';
 import 'screens/learner/home_screen.dart';
 import 'screens/learner/payment_screen.dart';
 import 'screens/learner/program_details_screen.dart';
@@ -49,6 +50,12 @@ class EdTechApp extends StatelessWidget {
           final profile =
               (args is UserProfile) ? args : UserProfile.learnerDemo;
           return ProfileSettingsScreen(profile: profile);
+        },
+        AppRoutes.feedback: (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          return FeedbackScreen(
+            initialCourseTitle: (args is String) ? args : null,
+          );
         },
       },
     );
