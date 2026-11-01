@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart">
   <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white" alt="Figma">
   <img src="https://img.shields.io/badge/Team-6-25307C?style=for-the-badge" alt="Team 6">
-  <img src="https://img.shields.io/badge/Status-Week%203%20Done-2ea44f?style=for-the-badge" alt="Status">
+  <img src="https://img.shields.io/badge/Status-Week%204%20Completed-brightgreen?style=for-the-badge" alt="Status">
 </p>
 
 <p align="center">
@@ -82,11 +82,40 @@ For Week 3, Team 6 evolved the UI prototype into a **functional, API-connected a
    - Interactive cart management pipeline with status filtering (All, Paid, In Cart) and live payment reminders.
    - Dynamic cart pricing, discount calculations, and item deletion with an empty cart state.
 4. **Automated Testing Suite:**
-   - 100% test pass rate across 6 dedicated widget test suites (`auth_validation_test.dart`, `teacher_auth_test.dart`, `payment_validation_test.dart`, `cart_management_test.dart`, `learner_cart_test.dart`, `program_details_test.dart`).
+    - 100% test pass rate across 6 dedicated widget test suites (`auth_validation_test.dart`, `teacher_auth_test.dart`, `payment_validation_test.dart`, `cart_management_test.dart`, `learner_cart_test.dart`, `program_details_test.dart`).
 
 ---
 
-## 📋 Complete 13-Screen Implementation Matrix
+## 🏆 Week 4 Final Deliverables (Complete App & Graduation Release)
+
+For Week 4 (Final Graduation Milestone), Team 6 connected all workflows into an end-to-end, fully functional mobile app with interactive forms, user personalization, and complete automated verification. Full details are documented in [WEEK4_CHANGELOG.md](WEEK4_CHANGELOG.md) and [DEMO_VIDEO_SCRIPT.md](DEMO_VIDEO_SCRIPT.md).
+
+### 🔑 Key Achievements:
+1. **Dynamic Cart & Enrollment Synchronization (`EnrollmentService`):**
+   - User-scoped cart and enrollment state that persists dynamically per logged-in learner.
+   - Enrolled badge state on `ProgramDetailsScreen` and dynamic "My Programs" grid on `HomeScreen`.
+   - Collapsible Syllabus accordion on Program Details with module counts, durations, and preview locks.
+2. **Interactive Course Feedback Form (`FeedbackScreen`):**
+   - Interactive 5-star rating bar with live feedback score.
+   - Multi-category feedback selection dropdown.
+   - Character length validation (minimum 10 characters required) and animated submission loader.
+   - Verified submission confirmation modal.
+3. **User Profile & Account Settings (`ProfileSettingsScreen`):**
+   - User profile management with dynamic initials avatar, email, and enrolled courses counter.
+   - Working preference switches for **Dark Theme** and **Push Notifications**.
+   - In-app profile editing modal and secure session logout.
+4. **Promo Coupon System & Payment Receipt (`CartScreen`):**
+   - Promotional discount code `EXCELERATE10` applying 10% off the cart subtotal.
+   - Real-time subtotal, discount, and total pricing updates.
+   - Payment confirmation dialog verifying the exact discounted total amount.
+5. **Teacher Analytics Dashboard (`TeacherDashboardScreen`):**
+   - Polished instructor analytics with summary KPI cards and enrollment capacity progress bars.
+6. **Automated Testing Suite (100% Pass Rate):**
+   - **55 / 55 tests passed** across 12 test suites covering every form, workflow, calculation, and screen.
+
+---
+
+## 📋 Complete 15-Screen Implementation Matrix
 
 | # | Screen Name | Assigned Developer | File Path | Status |
 |---|---|---|---|:---:|
@@ -95,14 +124,16 @@ For Week 3, Team 6 evolved the UI prototype into a **functional, API-connected a
 | 3 | **Learner Signup** | Fatima Zahid | `flutterdemo/lib/screens/common/signup_screen.dart` | ✅ Complete |
 | 4 | **Learner Home Portal** | Irtaza Ahmad (Lead) | `flutterdemo/lib/screens/learner/home_screen.dart` | ✅ Complete |
 | 5 | **Programs Listing** | Idiris Hassan | `flutterdemo/lib/screens/learner/programs_list_screen.dart` | ✅ Complete |
-| 6 | **Program Details (Dynamic)** | Sameer Rizwan | `flutterdemo/lib/screens/learner/program_details_screen.dart` | ✅ Complete |
-| 7 | **My Cart** | Mannu | `flutterdemo/lib/screens/learner/cart_screen.dart` | ✅ Complete |
+| 6 | **Program Details & Syllabus** | Sameer Rizwan / Idiris Hassan | `flutterdemo/lib/screens/learner/program_details_screen.dart` | ✅ Complete |
+| 7 | **My Cart (with Promo)** | Mannu | `flutterdemo/lib/screens/learner/cart_screen.dart` | ✅ Complete |
 | 8 | **Payment & Checkout** | Akshata | `flutterdemo/lib/screens/learner/payment_screen.dart` | ✅ Complete |
 | 9 | **Role Selection (Teacher)** | Irtaza Ahmad (Lead) | `flutterdemo/lib/screens/common/role_selection_screen.dart` | ✅ Complete |
 | 10 | **Teacher Login** | Aishika Pal | `flutterdemo/lib/screens/teacher/teacher_login_screen.dart` | ✅ Complete |
 | 11 | **Teacher Signup** | Aishika Pal | `flutterdemo/lib/screens/teacher/teacher_signup_screen.dart` | ✅ Complete |
-| 12 | **Teacher Dashboard** | Jennifer Shantal | `flutterdemo/lib/screens/teacher/teacher_dashboard_screen.dart` | ✅ Complete |
+| 12 | **Teacher Dashboard Analytics** | Jennifer Shantal | `flutterdemo/lib/screens/teacher/teacher_dashboard_screen.dart` | ✅ Complete |
 | 13 | **Cart Management (Admin)** | Abdul Kadir Choudhury | `flutterdemo/lib/screens/teacher/cart_management_screen.dart` | ✅ Complete |
+| 14 | **User Profile & Settings** | Aishika Pal | `flutterdemo/lib/screens/common/profile_settings_screen.dart` | ✅ Complete |
+| 15 | **Course Feedback & Rating** | Fatima Zahid | `flutterdemo/lib/screens/learner/feedback_screen.dart` | ✅ Complete |
 
 ---
 
@@ -121,15 +152,16 @@ Learner Login / Signup                        Teacher Login / Signup
       │                                              │
       ▼                                              ▼
 Learner Home Portal (/learner_home)           Teacher Dashboard (/teacher_dashboard)
-      │                                              │
-      ▼                                              ▼
-Programs List (/programs_list)                Cart Management (/cart_management)
+      │       ├── Profile (/profile)                 │
+      │       └── Feedback (/feedback)               ▼
+      ▼                                       Cart Management (/cart_management)
+Programs List (/programs_list)
       │
       ▼
 Program Details (/program_details)
       │
       ▼
-My Cart (/cart)
+My Cart (/cart) [Promo: EXCELERATE10]
       │
       ▼
 Payment (/payment) ──► Confirmation Receipt ──► Back to Home
@@ -138,9 +170,10 @@ Payment (/payment) ──► Confirmation Receipt ──► Back to Home
 ---
 
 ## 🛠️ Verification & Quality Assurance
-- **Automated Tests:** `flutter test` passes 100% of widget tests.
+- **Automated Tests:** `flutter test` passes 100% of test suites (**55 / 55 tests passed**).
 - **Static Analysis:** `flutter analyze` passes with 0 compile errors.
 - **Cross-Platform:** Responsive on Mobile (iPhone 14 / Android) and Web.
+
 
 ---
 
@@ -181,5 +214,4 @@ flutter run
 ## 🗺️ Project Roadmap
 - [x] **Week 1:** Proposal, Figma wireframes, and project skeleton setup
 - [x] **Week 2:** Build all 13 interactive Flutter UI screens, implement navigation flows, automated tests, and screenshots showcase
-- [x] **Week 3:** Mock API / JSON integration, dynamic route arguments, robust form validations, loading states, and 100% test coverage
-- [ ] **Week 4:** Final polish, comprehensive backend integration, and submission showcase
+- [x] **Week 4:** Final polish, dynamic cart/enrolment sync, feedback form, user profile, promo system, teacher analytics, and final submission release
