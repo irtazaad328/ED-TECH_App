@@ -88,7 +88,7 @@ For Week 3, Team 6 evolved the UI prototype into a **functional, API-connected a
 
 ## 🏆 Week 4 Final Deliverables (Complete App & Graduation Release)
 
-For Week 4 (Final Graduation Milestone), Team 6 connected all workflows into an end-to-end, fully functional mobile app with interactive forms, user personalization, and complete automated verification. Full details are documented in [WEEK4_CHANGELOG.md](WEEK4_CHANGELOG.md) and [DEMO_VIDEO_SCRIPT.md](DEMO_VIDEO_SCRIPT.md).
+For Week 4 (Final Graduation Milestone), Team 6 connected all workflows into an end-to-end, fully functional mobile app with interactive forms, user personalization, and complete automated verification. Full details are documented in [WEEK4_CHANGELOG.md](WEEK4_CHANGELOG.md).
 
 ### 🔑 Key Achievements:
 1. **Dynamic Cart & Enrollment Synchronization (`EnrollmentService`):**

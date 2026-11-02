@@ -20,7 +20,6 @@ Team 6 has successfully integrated and polished:
 5. **Promo Coupon & Payment Receipt:** Validated `EXCELERATE10` discount code (10% off), dynamic subtotal/total calculations, and detailed payment receipt dialog.
 6. **Teacher Analytics Dashboard:** Enhanced KPI metric cards and enrollment progress bars.
 7. **Comprehensive Test Suite:** 100% pass rate across 55 test cases in 12 test files.
-8. **Demo Video Script:** Complete step-by-step walkthrough script for the app demo video (`DEMO_VIDEO_SCRIPT.md`).
 
 ---
 
@@ -119,7 +118,7 @@ flutter test
 | Member | Assigned Week 4 Module | Files Contributed / Polished | Status |
 |---|---|---|:---:|
 | **Irtaza Ahmad** | Team Lead, Code Review, Conflict Resolution, Release Management, Architecture | `main.dart`, `app_routes.dart`, `README.md`, `WEEK4_CHANGELOG.md` | ✅ Merged & Verified |
-| **Idiris Hassan** | Syllabus Accordion, Enrolled Badging, Dynamic Cart State, Demo Video Script | `program_details_screen.dart`, `enrollment_service.dart`, `DEMO_VIDEO_SCRIPT.md` | ✅ Merged & Verified |
+| **Idiris Hassan** | Syllabus Accordion, Enrolled Badging, Dynamic Cart State | `program_details_screen.dart`, `enrollment_service.dart` | ✅ Merged & Verified |
 | **Fatima Zahid** | Interactive Course Feedback & Rating Form, Input Validation | `feedback_screen.dart`, `feedback_form_test.dart` | ✅ Merged & Verified |
 | **Aishika Pal** | User Profile & Settings Screen, Dark Theme & Preferences | `profile_settings_screen.dart`, `user_profile.dart`, `profile_settings_screen_test.dart` | ✅ Merged & Verified |
 | **Mannu** | Promotional Coupon Validation (`EXCELERATE10`), Discount Calculations, Receipt Audit | `cart_screen.dart`, `cart_receipt_test.dart`, `learner_cart_test.dart` | ✅ Merged & Verified |
